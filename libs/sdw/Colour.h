@@ -1,10 +1,11 @@
 #pragma once
 
 #include <iostream>
-#include <utility>
+//#include <utility>
 
 class Colour {
 	public:
+		Colour();
 		Colour(int r, int g, int b);
 		uint32_t pack();
 		friend std::ostream &operator<<(std::ostream &os, const Colour &colour);

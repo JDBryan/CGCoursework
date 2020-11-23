@@ -1,5 +1,7 @@
 #include "Colour.h"
 
+Colour::Colour() = default;
+
 Colour::Colour(int r, int g, int b) {
 	_red = r;
 	_green = g;

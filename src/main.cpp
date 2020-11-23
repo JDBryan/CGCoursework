@@ -1,4 +1,5 @@
 #include "DrawingWindow.h"
+#include "CanvasPoint.h"
 
 #define WIDTH 512
 #define HEIGHT 512
