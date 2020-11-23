@@ -11,9 +11,16 @@ class CanvasPoint {
 		Colour _colour;
 
 	public:
+		CanvasPoint();
+		CanvasPoint(glm::vec3 p);
+		CanvasPoint(glm::vec3 p, Colour c);
 		CanvasPoint(float x, float y, float z);
-		CanvasPoint(float x, float y, float z, Colour colour);
+		CanvasPoint(float x, float y, float z, Colour c);
+
+		float x();
+		float y();
+		float z();
+		
 		void draw(DrawingWindow &window);
 		friend std::ostream &operator<<(std::ostream &os, const CanvasPoint &point);
-
 };
