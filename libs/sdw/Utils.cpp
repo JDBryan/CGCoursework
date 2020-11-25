@@ -25,3 +25,7 @@ std::vector<float> interpolateSingleFloats(float from, float to, int numberOfVal
 	}
 	return results;
 }
+
+int randomNumber(int min, int max) {
+  return rand() % (max - min) + min;
+}

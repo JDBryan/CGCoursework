@@ -1,6 +1,8 @@
 #include "DrawingWindow.h"
 #include "CanvasPoint.h"
 #include "CanvasLine.h"
+#include "CanvasTriangle.h"
+#include "Utils.h"
 
 #define WIDTH 512
 #define HEIGHT 512
@@ -17,7 +19,13 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 		} else if (event.key.keysym.sym == SDLK_DOWN) {
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			window.savePPM("output.ppm");
-		}
+		} else if (event.key.keysym.sym == SDLK_u) {
+			CanvasPoint pointA = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
+			CanvasPoint pointB = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
+			CanvasPoint pointC = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
+			Colour colour = Colour(randomNumber(0, 256), randomNumber(0, 256), randomNumber(0, 256));
+      CanvasTriangle(pointA, pointB, pointC, colour).drawFrame(window);
+    }
 	}
 }
 
