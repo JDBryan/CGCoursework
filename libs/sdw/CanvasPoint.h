@@ -3,12 +3,14 @@
 #include <iostream>
 #include "DrawingWindow.h"
 #include "Colour.h"
+#include "TexturePoint.h"
 #include <glm/glm.hpp>
 
 class CanvasPoint {
 	private:
 		glm::vec3 _position;
 		Colour _colour;
+		TexturePoint _texturePoint;
 
 	public:
 		CanvasPoint();
@@ -20,6 +22,9 @@ class CanvasPoint {
 		float x();
 		float y();
 		float z();
+		TexturePoint getTexturePoint();
+
+		void setTexturePoint(TexturePoint t);
 
 		void draw(DrawingWindow &window);
 		friend std::ostream &operator<<(std::ostream &os, const CanvasPoint &point);

@@ -6,21 +6,25 @@ CanvasPoint::CanvasPoint() = default;
 CanvasPoint::CanvasPoint(glm::vec3 p) {
 	_position = p;
 	_colour = Colour(0, 0, 0);
+	_texturePoint = TexturePoint(-1, -1);
 }
 
 CanvasPoint::CanvasPoint(glm::vec3 p, Colour c) {
 	_position = p;
 	_colour = c;
+	_texturePoint = TexturePoint(-1, -1);
 }
 
 CanvasPoint::CanvasPoint(float x, float y, float z) {
 	_position = glm::vec3(x, y, z);
 	_colour = Colour(0, 0, 0);
+	_texturePoint = TexturePoint(-1, -1);
 }
 
 CanvasPoint::CanvasPoint(float x, float y, float z, Colour c) {
 	_position = glm::vec3(x, y, z);
 	_colour = c;
+	_texturePoint = TexturePoint(-1, -1);
 }
 
 //GETTERS
@@ -34,6 +38,15 @@ float CanvasPoint::y() {
 
 float CanvasPoint::z() {
 	return _position.z;
+}
+
+TexturePoint CanvasPoint::getTexturePoint() {
+	return _texturePoint;
+}
+
+//SETTERS
+void CanvasPoint::setTexturePoint(TexturePoint t) {
+	_texturePoint = t;
 }
 
 //OTHER METHODS

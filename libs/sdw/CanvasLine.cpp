@@ -29,14 +29,14 @@ float CanvasLine::length() {
 }
 
 CanvasPoint CanvasLine::findIntersectionWithY(float y) {
-    if (y < std::min(_v0.y(), _v1.y()) || y > std::max(_v0.y(), _v1.y())) {
-      std::cout << "something went wrong" << std::endl;
-      return CanvasPoint();
-    } else {
-      float ratio = (y - _v0.y()) / (_v1.y() - _v0.y());
-      float x = _v0.x() + (_v1.x() - _v0.x()) * ratio;
-      return CanvasPoint(x, y, 0);
-    }
+  if (y < std::min(_v0.y(), _v1.y()) || y > std::max(_v0.y(), _v1.y()) || _v0.y() == _v1.y()) {
+    return CanvasPoint();
+  } else {
+    float ratio = (y - _v0.y()) / (_v1.y() - _v0.y());
+    float x = _v0.x() + (_v1.x() - _v0.x()) * ratio;
+    float z = _v0.z() + (_v1.z() - _v0.z()) * ratio;
+    return CanvasPoint(x, y, z);
+  }
 }
 
 void CanvasLine::draw(DrawingWindow &window) {
