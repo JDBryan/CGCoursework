@@ -20,7 +20,9 @@ class CanvasTriangle {
 		CanvasPoint &v2();
 
 		void drawFrame(DrawingWindow &window);
-		bool vertexComparator(CanvasPoint lhs, CanvasPoint rhs);
+		void fill(DrawingWindow &window);
 		void orderVertices();
 		friend std::ostream &operator<<(std::ostream &os, const CanvasTriangle &triangle);
 };
+
+bool vertexComparator(CanvasPoint lhs, CanvasPoint rhs);

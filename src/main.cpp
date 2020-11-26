@@ -24,7 +24,7 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 			CanvasPoint pointB = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
 			CanvasPoint pointC = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
 			Colour colour = Colour(randomNumber(0, 256), randomNumber(0, 256), randomNumber(0, 256));
-      CanvasTriangle(pointA, pointB, pointC, colour).drawFrame(window);
+      CanvasTriangle(pointA, pointB, pointC, colour).fill(window);
     }
 	}
 }

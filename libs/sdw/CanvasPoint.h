@@ -20,7 +20,7 @@ class CanvasPoint {
 		float x();
 		float y();
 		float z();
-		
+
 		void draw(DrawingWindow &window);
 		friend std::ostream &operator<<(std::ostream &os, const CanvasPoint &point);
 };

@@ -1,6 +1,13 @@
 #include "CanvasLine.h"
 
 CanvasLine::CanvasLine() = default;
+
+CanvasLine::CanvasLine(CanvasPoint v0, CanvasPoint v1) {
+  _v0 = v0;
+  _v1 = v1;
+  _colour = Colour(0, 0, 0);
+}
+
 CanvasLine::CanvasLine(CanvasPoint v0, CanvasPoint v1, Colour c) {
   _v0 = v0;
   _v1 = v1;
@@ -16,9 +23,20 @@ CanvasPoint CanvasLine::v1() {
 }
 
 float CanvasLine::length() {
-  float xDiff = _v0.x() - _v1.x();
-  float yDiff = _v0.y() - _v1.y();
-  return std::sqrt(yDiff*yDiff + xDiff*xDiff);
+  float xDist = _v0.x() - _v1.x();
+  float yDist = _v0.y() - _v1.y();
+  return std::sqrt(yDist*yDist + xDist*xDist);
+}
+
+CanvasPoint CanvasLine::findIntersectionWithY(float y) {
+    if (y < std::min(_v0.y(), _v1.y()) || y > std::max(_v0.y(), _v1.y())) {
+      std::cout << "something went wrong" << std::endl;
+      return CanvasPoint();
+    } else {
+      float ratio = (y - _v0.y()) / (_v1.y() - _v0.y());
+      float x = _v0.x() + (_v1.x() - _v0.x()) * ratio;
+      return CanvasPoint(x, y, 0);
+    }
 }
 
 void CanvasLine::draw(DrawingWindow &window) {

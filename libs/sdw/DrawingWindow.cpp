@@ -75,7 +75,7 @@ void DrawingWindow::setPixelColour(size_t x, size_t y, Colour colour) {
 	if (x >= 0 && x < width && y >= 0 && y < height) {
 		pixelBuffer[(y * width) + x] = colour.pack();
 	} else {
-		std::cout << x << "," << y << " not on visible screen area" << std::endl;
+		//std::cout << x << "," << y << " not on visible screen area" << std::endl;
 	}
 }
 

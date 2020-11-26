@@ -12,14 +12,15 @@ class CanvasLine {
 
 	public:
 		CanvasLine();
+		CanvasLine(CanvasPoint v0, CanvasPoint v1);
 		CanvasLine(CanvasPoint v0, CanvasPoint v1, Colour c);
 
 		CanvasPoint v0();
 		CanvasPoint v1();
 
 		void draw(DrawingWindow &window);
+		CanvasPoint findIntersectionWithY(float y);
 		float length();
-		float gradient();
 
 		friend std::ostream &operator<<(std::ostream &os, const CanvasLine &line);
 
