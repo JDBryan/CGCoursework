@@ -60,6 +60,10 @@ void CanvasTriangle::fill(DrawingWindow &window) {
   }
 }
 
+void CanvasTriangle::mapTexture(DrawingWindow &window) {
+  
+}
+
 bool vertexComparator(CanvasPoint lhs, CanvasPoint rhs) {
   return lhs.y() < rhs.y();
 }

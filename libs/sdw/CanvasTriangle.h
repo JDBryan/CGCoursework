@@ -21,6 +21,7 @@ class CanvasTriangle {
 
 		void drawFrame(DrawingWindow &window);
 		void fill(DrawingWindow &window);
+		void mapTexture(DrawingWindow &window);
 		void orderVertices();
 		friend std::ostream &operator<<(std::ostream &os, const CanvasTriangle &triangle);
 };
