@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	pointB.setTexturePoint(395,380);
 	CanvasPoint pointC = CanvasPoint(10, 150, 0);
 	pointC.setTexturePoint(65,330);
-	CanvasTriangle triangle = CanvasTriangle(pointA, pointB, pointC);
+	CanvasTriangle triangle = CanvasTriangle(pointA, pointB, pointC, Colour(255, 0, 0));
 	triangle.mapTexture(window, texture);
 
 	while (true) {

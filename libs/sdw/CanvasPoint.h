@@ -24,6 +24,8 @@ class CanvasPoint {
 		float y();
 		float z();
 		TexturePoint getTexturePoint();
+		glm::vec3 getPosition();
+		glm::vec3 getTextPosition();
 
 		void setTexturePoint(float x, float y);
 

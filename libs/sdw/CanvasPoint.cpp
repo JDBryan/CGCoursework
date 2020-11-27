@@ -40,6 +40,14 @@ float CanvasPoint::z() {
 	return _position.z;
 }
 
+glm::vec3 CanvasPoint::getPosition() {
+	return _position;
+}
+
+glm::vec3 CanvasPoint::getTextPosition() {
+	return glm::vec3(_texturePoint.x(), _texturePoint.y(), 0);
+}
+
 TexturePoint CanvasPoint::getTexturePoint() {
 	return _texturePoint;
 }
