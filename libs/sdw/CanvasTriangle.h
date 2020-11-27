@@ -4,6 +4,7 @@
 #include "CanvasLine.h"
 #include "Colour.h"
 #include "DrawingWindow.h"
+#include "Utils.h"
 
 class CanvasTriangle {
 	private:
@@ -21,7 +22,7 @@ class CanvasTriangle {
 
 		void drawFrame(DrawingWindow &window);
 		void fill(DrawingWindow &window);
-		void mapTexture(DrawingWindow &window);
+		void mapTexture(DrawingWindow &window, TextureMap &texture);
 		void orderVertices();
 		friend std::ostream &operator<<(std::ostream &os, const CanvasTriangle &triangle);
 };

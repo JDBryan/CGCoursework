@@ -3,6 +3,7 @@
 #include "Colour.h"
 #include "Utils.h"
 #include "DrawingWindow.h"
+#include "TextureMap.h"
 
 class CanvasLine {
 	private:
@@ -19,6 +20,7 @@ class CanvasLine {
 		CanvasPoint v1();
 
 		void draw(DrawingWindow &window);
+		void mapTexture(DrawingWindow &window, TextureMap &texture);
 		CanvasPoint findIntersectionWithY(float y);
 		float length();
 

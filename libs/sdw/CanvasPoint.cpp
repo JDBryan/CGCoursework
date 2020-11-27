@@ -45,8 +45,8 @@ TexturePoint CanvasPoint::getTexturePoint() {
 }
 
 //SETTERS
-void CanvasPoint::setTexturePoint(TexturePoint t) {
-	_texturePoint = t;
+void CanvasPoint::setTexturePoint(float x, float y) {
+	_texturePoint = TexturePoint(x, y);
 }
 
 //OTHER METHODS

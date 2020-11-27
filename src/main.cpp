@@ -31,11 +31,18 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 
 int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+	TextureMap texture = TextureMap("assets/texture.ppm");
 	SDL_Event event;
-	CanvasPoint pointA = CanvasPoint(100, 100, 0);
-	CanvasPoint pointB = CanvasPoint(100, 100, 0);
-	CanvasLine line = CanvasLine(pointA, pointB, Colour(255, 0, 0));
-	line.draw(window);
+
+	CanvasPoint pointA = CanvasPoint(160, 10, 0);
+	pointA.setTexturePoint(195,5);
+	CanvasPoint pointB = CanvasPoint(300, 230, 0);
+	pointB.setTexturePoint(395,380);
+	CanvasPoint pointC = CanvasPoint(10, 150, 0);
+	pointC.setTexturePoint(65,330);
+	CanvasTriangle triangle = CanvasTriangle(pointA, pointB, pointC);
+	triangle.mapTexture(window, texture);
+
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
 		if (window.pollForInputEvents(event)) handleEvent(event, window);

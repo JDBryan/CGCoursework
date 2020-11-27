@@ -29,11 +29,11 @@ TextureMap::TextureMap(const std::string &filename) {
 	inputStream.close();
 }
 
-uint32_t TextureMap::getColourFromPoint(int x, int y) {
+Colour TextureMap::getColourFromPoint(int x, int y) {
 	if (x < 0 || x > width || y < 0 || y > height) {
 		std::cout << "WRONG: " <<  x << ", " << y << std::endl;
 	}
-	return pixels[y*width + x];
+	return Colour(pixels[y*width + x]);
 }
 
 std::ostream &operator<<(std::ostream &os, const TextureMap &map) {

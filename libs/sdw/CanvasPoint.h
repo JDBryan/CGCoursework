@@ -12,6 +12,7 @@ class CanvasPoint {
 		Colour _colour;
 		TexturePoint _texturePoint;
 
+
 	public:
 		CanvasPoint();
 		CanvasPoint(glm::vec3 p);
@@ -24,7 +25,7 @@ class CanvasPoint {
 		float z();
 		TexturePoint getTexturePoint();
 
-		void setTexturePoint(TexturePoint t);
+		void setTexturePoint(float x, float y);
 
 		void draw(DrawingWindow &window);
 		friend std::ostream &operator<<(std::ostream &os, const CanvasPoint &point);

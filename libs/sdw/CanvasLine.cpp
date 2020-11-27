@@ -56,6 +56,24 @@ void CanvasLine::draw(DrawingWindow &window) {
   }
 }
 
+void CanvasLine::mapTexture(DrawingWindow &window, TextureMap &texture) {
+  float xDist = _v1.x() - _v0.x();
+  float yDist = _v1.y() - _v0.y();
+
+  if (length() == 0) {
+    window.setPixelColour(_v0.x(), _v0.y(), _colour);
+  } else {
+    int numberOfSteps = std::ceil(std::max(std::abs(xDist), std::abs(yDist)))+1;
+    std::vector<float> xTextVals = interpolateSingleFloats(_v0.getTexturePoint().x(), _v1.getTexturePoint().x(), numberOfSteps);
+    std::vector<float> yTextVals = interpolateSingleFloats(_v0.getTexturePoint().y(), _v1.getTexturePoint().y(), numberOfSteps);
+    std::vector<float> xVals = interpolateSingleFloats(_v0.x(), _v1.x(), numberOfSteps);
+    std::vector<float> yVals = interpolateSingleFloats(_v0.y(), _v1.y(), numberOfSteps);
+    std::vector<float> zVals = interpolateSingleFloats(_v0.z(), _v1.z(), numberOfSteps);
+   for (int i = 0; i < numberOfSteps; i++) {
+     window.setPixelColour(xVals[i], yVals[i], texture.getColourFromPoint(xTextVals[i], yTextVals[i]));
+   }
+  }
+}
 
 std::ostream &operator<<(std::ostream &os, CanvasLine &line) {
 	os << line.v0() << line.v1();
