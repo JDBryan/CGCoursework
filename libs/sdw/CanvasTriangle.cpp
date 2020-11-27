@@ -96,7 +96,7 @@ void CanvasTriangle::mapTexture(DrawingWindow &window, TextureMap &texture) {
     line.mapTexture(window, texture);
   }
 
-  int bottomHalfSteps = v2().y() - v1().y();
+  int bottomHalfSteps = (v2().y() - v1().y()) + 1;
   std::vector<float> xVals12 = interpolateSingleFloats(v1().x(), v2().x(), bottomHalfSteps);
   std::vector<float> yVals12 = interpolateSingleFloats(v1().y()-1, v2().y(), bottomHalfSteps);
   std::vector<float> xTextVals12 = interpolateSingleFloats(v1().getTexturePoint().x(), v2().getTexturePoint().x(), bottomHalfSteps);
@@ -113,38 +113,6 @@ void CanvasTriangle::mapTexture(DrawingWindow &window, TextureMap &texture) {
     point1.setTexturePoint(xTextVals12[i], yTextVals12[i]);
     point2.setTexturePoint(botXTextVals02[i], botYTextVals02[i]);
     CanvasLine line = CanvasLine(point1, point2, 0);
-    line.mapTexture(window, texture);
-  }
-
-  // for (int y = v0().y(); y < v1().y(); y++) {
-  //   float ratio01 = (y - v0().y()) / (v1().y() - v0().y());
-  //   float ratio02 = (y - v0().y()) / (v2().y() - v0().y());
-  //   float xText01 = v0().getTexturePoint().x() + ratio01*(v1().getTexturePoint().x() - v0().getTexturePoint().x());
-  //   float yText01 = v0().getTexturePoint().y() + ratio01*(v1().getTexturePoint().y() - v0().getTexturePoint().y());
-  //   float xText02 = v0().getTexturePoint().x() + ratio02*(v2().getTexturePoint().x() - v0().getTexturePoint().x());
-  //   float yText02 = v0().getTexturePoint().y() + ratio02*(v2().getTexturePoint().y() - v0().getTexturePoint().y());
-  //   CanvasPoint point1 = line01.findIntersectionWithY(y);
-  //   point1.setTexturePoint(xText01, yText01);
-  //   CanvasPoint point2 = line02.findIntersectionWithY(y);
-  //   point2.setTexturePoint(xText02, yText02);
-  //   CanvasLine line = CanvasLine(point1, point2);
-  //   line.mapTexture(window, texture);
-  // }
-
-
-
-  for (int y = v1().y(); y < v2().y(); y++) {
-    float ratio12 = (y - v1().y()) / (v2().y() - v1().y());
-    float ratio02 = (y - v0().y()) / (v2().y() - v0().y());
-    float xText12 = v1().getTexturePoint().x() + ratio12*(v2().getTexturePoint().x() - v1().getTexturePoint().x());
-    float yText12 = v1().getTexturePoint().y() + ratio12*(v2().getTexturePoint().y() - v2().getTexturePoint().y());
-    float xText02 = v0().getTexturePoint().x() + ratio02*(v2().getTexturePoint().x() - v0().getTexturePoint().x());
-    float yText02 = v0().getTexturePoint().y() + ratio02*(v2().getTexturePoint().y() - v0().getTexturePoint().y());
-    CanvasPoint point1 = line12.findIntersectionWithY(y);
-    point1.setTexturePoint(xText12, yText12);
-    CanvasPoint point2 = line02.findIntersectionWithY(y);
-    point2.setTexturePoint(xText02, yText02);
-    CanvasLine line = CanvasLine(point1, point2);
     line.mapTexture(window, texture);
   }
 }
