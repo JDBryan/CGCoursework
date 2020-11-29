@@ -26,6 +26,7 @@ class ModelTriangle {
 		CanvasTriangle project(DrawingWindow &window, Camera &camera, float scalar);
 		void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
 		void fill(DrawingWindow &window, Camera &camera, float scalar);
+		void mapTexture(DrawingWindow &window, Camera &camera, float scalar);
 		friend std::ostream &operator<<(std::ostream &os, ModelTriangle triangle);
 
 

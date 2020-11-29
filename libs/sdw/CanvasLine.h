@@ -20,7 +20,7 @@ class CanvasLine {
 		CanvasPoint v1();
 
 		void draw(DrawingWindow &window);
-		void mapTexture(DrawingWindow &window, TextureMap &texture);
+		void mapTexture(DrawingWindow &window);
 		CanvasPoint findIntersectionWithY(float y);
 		float length();
 

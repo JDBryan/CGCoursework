@@ -60,7 +60,11 @@ void CanvasTriangle::fill(DrawingWindow &window) {
   }
 }
 
-void CanvasTriangle::mapTexture(DrawingWindow &window, TextureMap &texture) {
+void CanvasTriangle::mapTexture(DrawingWindow &window) {
+  if (!_material.hasTexture()) {
+    std::cout << "no texture found for triangle" << std::endl;
+  }
+  
   float splitRatio = (v1().y() - v0().y()) / (v2().y() - v0().y());
   float xCanv = v0().x() + splitRatio * (v2().x() - v0().x());
   float yCanv = v0().y() + splitRatio * (v2().y() - v0().y());
@@ -80,8 +84,8 @@ void CanvasTriangle::mapTexture(DrawingWindow &window, TextureMap &texture) {
     CanvasPoint point2 = CanvasPoint(positions02[i]);
     point1.setTexturePoint(tPositions01[i].x, tPositions01[i].y);
     point2.setTexturePoint(tPositions02[i].x, tPositions02[i].y);
-    CanvasLine line = CanvasLine(point1, point2);
-    line.mapTexture(window, texture);
+    CanvasLine line = CanvasLine(point1, point2, _material);
+    line.mapTexture(window);
   }
 
   int bottomHalfSteps = (v2().y() - v1().y()) + 1;
@@ -95,8 +99,8 @@ void CanvasTriangle::mapTexture(DrawingWindow &window, TextureMap &texture) {
     CanvasPoint point2 = CanvasPoint(positions02[i]);
     point1.setTexturePoint(tPositions12[i].x, tPositions12[i].y);
     point2.setTexturePoint(tPositions02[i].x, tPositions02[i].y);
-    CanvasLine line = CanvasLine(point1, point2);
-    line.mapTexture(window, texture);
+    CanvasLine line = CanvasLine(point1, point2, _material);
+    line.mapTexture(window);
   }
 }
 

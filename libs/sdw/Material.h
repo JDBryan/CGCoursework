@@ -15,6 +15,7 @@ class Material {
     Material();
     Material(std::string name);
     Material(Colour colour);
+    Material(TextureMap &texture);
 
     Colour getColour();
     TextureMap *getTexture();

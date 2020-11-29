@@ -22,6 +22,8 @@ class ModelPoint {
     float y();
     float z();
 
+    void setTexturePoint(float x, float y);
+
     CanvasPoint project(DrawingWindow &window, Camera &camera, float scalar);
 
     ModelPoint operator-(ModelPoint rhs);

@@ -43,6 +43,10 @@ void ModelTriangle::fill(DrawingWindow &window, Camera &camera, float scalar) {
   project(window, camera, scalar).fill(window);
 }
 
+void ModelTriangle::mapTexture(DrawingWindow &window, Camera &camera, float scalar) {
+  project(window, camera, scalar).mapTexture(window);
+}
+
 std::ostream &operator<<(std::ostream &os, ModelTriangle triangle) {
 	os << "(" << triangle.v0().x() << ", " << triangle.v0().y() << ", " << triangle.v0().z() << ")\n";
 	os << "(" << triangle.v1().x() << ", " << triangle.v1().y() << ", " << triangle.v1().z() << ")\n";

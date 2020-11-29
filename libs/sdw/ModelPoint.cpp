@@ -34,10 +34,15 @@ float ModelPoint::z() {
   return _position.z;
 }
 
+void ModelPoint::setTexturePoint(float x, float y) {
+	_texturePoint = TexturePoint(x, y);
+}
+
 CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {
   float canvasX = camera.getFocalLength() * ((camera.x()-x())/(z()-camera.z()));
   float canvasY = camera.getFocalLength() * ((y()-camera.y())/(z()-camera.z()));
   CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, z()-camera.z(), _material);
+  point.setTexturePoint(_texturePoint.x(), _texturePoint.y());
   return point;
 }
 

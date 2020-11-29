@@ -23,8 +23,8 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 			CanvasPoint pointA = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
 			CanvasPoint pointB = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
 			CanvasPoint pointC = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			Colour colour = Colour(randomNumber(0, 256), randomNumber(0, 256), randomNumber(0, 256));
-      CanvasTriangle(pointA, pointB, pointC, colour).fill(window);
+			Material material = Material(Colour(randomNumber(0, 256), randomNumber(0, 256), randomNumber(0, 256)));
+      CanvasTriangle(pointA, pointB, pointC, material).fill(window);
     }
 	}
 }
@@ -35,11 +35,14 @@ int main(int argc, char *argv[]) {
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	SDL_Event event;
 
-	ModelPoint pointA = ModelPoint(0, 0, 0);
-	ModelPoint pointB = ModelPoint(100, 100, 2);
-	ModelPoint pointC = ModelPoint(-100, 100, 2);
-	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(Colour(255, 0, 0)));
-	triangle.fill(window, camera, 1);
+	ModelPoint pointA = ModelPoint(0, 200, 0);
+	ModelPoint pointB = ModelPoint(200, -200, 2);
+	ModelPoint pointC = ModelPoint(-200, -50, 2);
+	pointA.setTexturePoint(195, 5);
+	pointB.setTexturePoint(395, 380);
+	pointC.setTexturePoint(65, 330);
+	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(texture));
+	triangle.mapTexture(window, camera, 1);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !

@@ -6,6 +6,7 @@ Material::Material() {
 
 Material::Material(std::string name) {
   _name = name;
+  _colour = Colour(0,0,0);
   _texture = nullptr;
   _hasTexture = false;
 }
@@ -15,6 +16,13 @@ Material::Material(Colour colour) {
   _colour = colour;
   _texture = nullptr;
   _hasTexture = false;
+}
+
+Material::Material(TextureMap &texture) {
+  _name = "unnamed";
+  _colour = Colour(0,0,0);
+  _texture = &texture;
+  _hasTexture = true;
 }
 
 Colour Material::getColour() {
