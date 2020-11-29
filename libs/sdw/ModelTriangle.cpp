@@ -9,11 +9,11 @@ ModelTriangle::ModelTriangle(ModelPoint v0, ModelPoint v1, ModelPoint v2) {
   _vertices.push_back(v2);
 }
 
-ModelTriangle::ModelTriangle(ModelPoint v0, ModelPoint v1, ModelPoint v2, Colour colour) {
+ModelTriangle::ModelTriangle(ModelPoint v0, ModelPoint v1, ModelPoint v2, Material m) {
   _vertices.push_back(v0);
   _vertices.push_back(v1);
   _vertices.push_back(v2);
-  _colour = colour;
+  _material = m;
 }
 
 ModelPoint ModelTriangle::v0() {
@@ -32,7 +32,7 @@ CanvasTriangle ModelTriangle::project(DrawingWindow &window, Camera &camera, flo
   CanvasPoint projectedV0 = v0().project(window, camera, scalar);
   CanvasPoint projectedV1 = v1().project(window, camera, scalar);
   CanvasPoint projectedV2 = v2().project(window, camera, scalar);
-  return CanvasTriangle(projectedV0, projectedV1, projectedV2, _colour);
+  return CanvasTriangle(projectedV0, projectedV1, projectedV2, _material);
 }
 
 void ModelTriangle::drawFrame(DrawingWindow &window, Camera &camera, float scalar) {

@@ -9,12 +9,12 @@
 class CanvasTriangle {
 	private:
 		std::vector<CanvasPoint> _vertices;
-		Colour _colour;
+		Material _material;
 
 	public:
 		CanvasTriangle();
 		CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2);
-		CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2, Colour colour);
+		CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2, Material _material);
 
 		CanvasPoint &v0();
 		CanvasPoint &v1();

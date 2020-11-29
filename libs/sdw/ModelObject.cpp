@@ -15,7 +15,7 @@ std::vector<ModelTriangle> ModelObject::getFaces() {
 }
 
 void ModelObject::addFace(ModelPoint v0, ModelPoint v1, ModelPoint v2) {
-  ModelTriangle newTriangle = ModelTriangle(v0, v1, v2, _colour);
+  ModelTriangle newTriangle = ModelTriangle(v0, v1, v2, _material);
   _faces.push_back(newTriangle);
 }
 

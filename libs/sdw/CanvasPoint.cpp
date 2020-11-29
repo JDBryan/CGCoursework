@@ -5,25 +5,25 @@ CanvasPoint::CanvasPoint() = default;
 
 CanvasPoint::CanvasPoint(glm::vec3 p) {
 	_position = p;
-	_colour = Colour(0, 0, 0);
+	_material = Material(Colour(0, 0, 0));
 	_texturePoint = TexturePoint(-1, -1);
 }
 
-CanvasPoint::CanvasPoint(glm::vec3 p, Colour c) {
+CanvasPoint::CanvasPoint(glm::vec3 p, Material m) {
 	_position = p;
-	_colour = c;
+	_material = m;
 	_texturePoint = TexturePoint(-1, -1);
 }
 
 CanvasPoint::CanvasPoint(float x, float y, float z) {
 	_position = glm::vec3(x, y, z);
-	_colour = Colour(0, 0, 0);
+	_material = Material(Colour(0, 0, 0));
 	_texturePoint = TexturePoint(-1, -1);
 }
 
-CanvasPoint::CanvasPoint(float x, float y, float z, Colour c) {
+CanvasPoint::CanvasPoint(float x, float y, float z, Material m) {
 	_position = glm::vec3(x, y, z);
-	_colour = c;
+	_material = m;
 	_texturePoint = TexturePoint(-1, -1);
 }
 
@@ -59,7 +59,7 @@ void CanvasPoint::setTexturePoint(float x, float y) {
 
 //OTHER METHODS
 void CanvasPoint::draw(DrawingWindow &window) {
-	window.setPixelColour(_position.x, _position.y, _colour);
+	window.setPixelColour(_position.x, _position.y, _material.getColour());
 }
 
 std::ostream &operator<<(std::ostream &os, const CanvasPoint &point) {

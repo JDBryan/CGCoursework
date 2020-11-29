@@ -2,23 +2,23 @@
 
 #include <iostream>
 #include "DrawingWindow.h"
-#include "Colour.h"
+#include "Material.h"
 #include "TexturePoint.h"
 #include <glm/glm.hpp>
 
 class CanvasPoint {
 	private:
 		glm::vec3 _position;
-		Colour _colour;
+		Material _material;
 		TexturePoint _texturePoint;
 
 
 	public:
 		CanvasPoint();
 		CanvasPoint(glm::vec3 p);
-		CanvasPoint(glm::vec3 p, Colour c);
+		CanvasPoint(glm::vec3 p, Material m);
 		CanvasPoint(float x, float y, float z);
-		CanvasPoint(float x, float y, float z, Colour c);
+		CanvasPoint(float x, float y, float z, Material m);
 
 		float x();
 		float y();

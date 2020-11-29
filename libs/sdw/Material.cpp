@@ -1,7 +1,18 @@
 #include "Material.h"
 
+Material::Material() {
+  _texture = nullptr;
+}
+
 Material::Material(std::string name) {
   _name = name;
+  _texture = nullptr;
+  _hasTexture = false;
+}
+
+Material::Material(Colour colour) {
+  _name = "unnamed";
+  _colour = colour;
   _texture = nullptr;
   _hasTexture = false;
 }

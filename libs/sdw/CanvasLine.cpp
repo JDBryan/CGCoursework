@@ -5,13 +5,13 @@ CanvasLine::CanvasLine() = default;
 CanvasLine::CanvasLine(CanvasPoint v0, CanvasPoint v1) {
   _v0 = v0;
   _v1 = v1;
-  _colour = Colour(0, 0, 0);
+  _material = Material(Colour(0,0,0));
 }
 
-CanvasLine::CanvasLine(CanvasPoint v0, CanvasPoint v1, Colour c) {
+CanvasLine::CanvasLine(CanvasPoint v0, CanvasPoint v1, Material m) {
   _v0 = v0;
   _v1 = v1;
-  _colour = c;
+  _material = m;
 }
 
 CanvasPoint CanvasLine::v0() {
@@ -44,12 +44,12 @@ void CanvasLine::draw(DrawingWindow &window) {
   float yDist = _v1.y() - _v0.y();
 
   if (length() == 0) {
-    window.setPixelColour(_v0.x(), _v0.y(), _colour);
+    window.setPixelColour(_v0.x(), _v0.y(), _material.getColour());
   } else {
     int numberOfSteps = std::ceil(std::max(std::abs(xDist), std::abs(yDist)))+1;
     std::vector<glm::vec3> positions = interpolateVectors(_v0.getPosition(), _v1.getPosition(), numberOfSteps);
    for (int i = 0; i < numberOfSteps; i++) {
-     window.setPixelColour(positions[i].x, positions[i].y, _colour);
+     window.setPixelColour(positions[i].x, positions[i].y, _material.getColour());
    }
   }
 }
@@ -59,7 +59,7 @@ void CanvasLine::mapTexture(DrawingWindow &window, TextureMap &texture) {
   float yDist = _v1.y() - _v0.y();
 
   if (length() == 0) {
-    window.setPixelColour(_v0.x(), _v0.y(), _colour);
+    window.setPixelColour(_v0.x(), _v0.y(), _material.getColour());
   } else {
     int numberOfSteps = std::ceil(std::max(std::abs(xDist), std::abs(yDist)))+1;
     std::vector<float> xTextVals = interpolateSingleFloats(_v0.getTexturePoint().x(), _v1.getTexturePoint().x(), numberOfSteps);

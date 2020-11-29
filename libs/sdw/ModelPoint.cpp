@@ -6,15 +6,15 @@ ModelPoint::ModelPoint(float x, float y, float z) {
   _position.x = x;
   _position.y = y;
   _position.z = z;
-  _colour = Colour(0,0,0);
+  _material = Material(Colour(0, 0, 0));
   _texturePoint = TexturePoint(-1,-1);
 }
 
-ModelPoint::ModelPoint(float x, float y, float z, Colour colour) {
+ModelPoint::ModelPoint(float x, float y, float z, Material m) {
   _position.x = x;
   _position.y = y;
   _position.z = z;
-  _colour = colour;
+  _material = m;
   _texturePoint = TexturePoint(-1,-1);
 }
 
@@ -37,7 +37,7 @@ float ModelPoint::z() {
 CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {
   float canvasX = camera.getFocalLength() * ((camera.x()-x())/(z()-camera.z()));
   float canvasY = camera.getFocalLength() * ((y()-camera.y())/(z()-camera.z()));
-  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, z()-camera.z());
+  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, z()-camera.z(), _material);
   return point;
 }
 
@@ -47,6 +47,6 @@ std::ostream &operator<<(std::ostream &os, const ModelPoint &point) {
 }
 
 ModelPoint ModelPoint::operator-(ModelPoint rhs) {
-        glm::vec3 temp = getPosition() - rhs.getPosition();
-        return ModelPoint(temp.x, temp.y, temp.z);
+  glm::vec3 temp = getPosition() - rhs.getPosition();
+  return ModelPoint(temp.x, temp.y, temp.z);
 }

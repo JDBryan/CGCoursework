@@ -9,12 +9,12 @@ class CanvasLine {
 	private:
 		CanvasPoint _v0;
 		CanvasPoint _v1;
-		Colour _colour;
+		Material _material;
 
 	public:
 		CanvasLine();
 		CanvasLine(CanvasPoint v0, CanvasPoint v1);
-		CanvasLine(CanvasPoint v0, CanvasPoint v1, Colour c);
+		CanvasLine(CanvasPoint v0, CanvasPoint v1, Material m);
 
 		CanvasPoint v0();
 		CanvasPoint v1();

@@ -12,7 +12,9 @@ class Material {
     bool _hasTexture;
 
   public:
+    Material();
     Material(std::string name);
+    Material(Colour colour);
 
     Colour getColour();
     TextureMap *getTexture();

@@ -9,13 +9,13 @@ class ModelPoint {
 
   private:
     glm::vec3 _position;
-    Colour _colour;
+    Material _material;
     TexturePoint _texturePoint;
 
   public:
     ModelPoint();
     ModelPoint(float x, float y, float z);
-    ModelPoint(float x, float y, float z, Colour colour);
+    ModelPoint(float x, float y, float z, Material m);
 
     glm::vec3 getPosition();
     float x();

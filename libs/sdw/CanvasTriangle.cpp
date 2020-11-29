@@ -7,15 +7,15 @@ CanvasTriangle::CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2) {
   _vertices.push_back(v1);
   _vertices.push_back(v2);
   orderVertices();
-  _colour = Colour(0, 0, 0);
+  _material = Material(Colour(0,0,0));
 }
 
-CanvasTriangle::CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2, Colour colour) {
+CanvasTriangle::CanvasTriangle(CanvasPoint v0, CanvasPoint v1, CanvasPoint v2, Material m) {
   _vertices.push_back(v0);
   _vertices.push_back(v1);
   _vertices.push_back(v2);
   orderVertices();
-  _colour = colour;
+  _material = m;
 }
 
 CanvasPoint &CanvasTriangle::v0() {
@@ -35,9 +35,9 @@ void CanvasTriangle::orderVertices() {
 }
 
 void CanvasTriangle::drawFrame(DrawingWindow &window) {
-  CanvasLine(v0(), v1(), _colour).draw(window);
-  CanvasLine(v1(), v2(), _colour).draw(window);
-  CanvasLine(v2(), v0(), _colour).draw(window);
+  CanvasLine(v0(), v1(), _material).draw(window);
+  CanvasLine(v1(), v2(), _material).draw(window);
+  CanvasLine(v2(), v0(), _material).draw(window);
 }
 
 void CanvasTriangle::fill(DrawingWindow &window) {
@@ -48,14 +48,14 @@ void CanvasTriangle::fill(DrawingWindow &window) {
   for (float y = v0().y(); y < v1().y(); y++) {
     CanvasPoint point1 = line01.findIntersectionWithY(y);
     CanvasPoint point2 = line02.findIntersectionWithY(y);
-    CanvasLine line = CanvasLine(point1, point2, _colour);
+    CanvasLine line = CanvasLine(point1, point2, _material);
     line.draw(window);
   }
 
   for (float y = v1().y(); y < v2().y(); y++) {
     CanvasPoint point1 = line12.findIntersectionWithY(y);
     CanvasPoint point2 = line02.findIntersectionWithY(y);
-    CanvasLine line = CanvasLine(point1, point2, _colour);
+    CanvasLine line = CanvasLine(point1, point2, _material);
     line.draw(window);
   }
 }

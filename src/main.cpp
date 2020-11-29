@@ -35,11 +35,11 @@ int main(int argc, char *argv[]) {
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	SDL_Event event;
 
-	ModelPoint pointA = ModelPoint(0, 0, 0, Colour(255, 0, 0));
-	ModelPoint pointB = ModelPoint(100, 100, 2, Colour(255, 0, 0));
-	ModelPoint pointC = ModelPoint(-100, 100, 2, Colour(255, 0, 0));
-	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Colour(255, 0, 0));
-	triangle.fill(window, camera, 0.5);
+	ModelPoint pointA = ModelPoint(0, 0, 0);
+	ModelPoint pointB = ModelPoint(100, 100, 2);
+	ModelPoint pointC = ModelPoint(-100, 100, 2);
+	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(Colour(255, 0, 0)));
+	triangle.fill(window, camera, 1);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
