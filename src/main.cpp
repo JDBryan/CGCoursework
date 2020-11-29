@@ -2,6 +2,7 @@
 #include "CanvasPoint.h"
 #include "CanvasLine.h"
 #include "CanvasTriangle.h"
+#include "ModelPoint.h"
 #include "Utils.h"
 
 #define WIDTH 512
@@ -31,17 +32,17 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 
 int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	SDL_Event event;
 
-	CanvasPoint pointA = CanvasPoint(160, 10, 0);
-	pointA.setTexturePoint(195,5);
-	CanvasPoint pointB = CanvasPoint(300, 230, 0);
-	pointB.setTexturePoint(395,380);
-	CanvasPoint pointC = CanvasPoint(10, 150, 0);
-	pointC.setTexturePoint(65,330);
-	CanvasTriangle triangle = CanvasTriangle(pointA, pointB, pointC, Colour(255, 0, 0));
-	triangle.mapTexture(window, texture);
+	ModelPoint pointA = ModelPoint(0, 0, 0, Colour(255, 0, 0));
+	ModelPoint pointB = ModelPoint(100, 100, 2, Colour(255, 0, 0));
+	ModelPoint pointC = ModelPoint(-100, 100, 2, Colour(255, 0, 0));
+	CanvasPoint pA = pointA.project(window, camera, 1);
+	CanvasPoint pB = pointB.project(window, camera, 1);
+	CanvasPoint pC = pointC.project(window, camera, 1);
+	CanvasTriangle(pA, pB, pC, Colour(255, 0, 0)).fill(window);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
