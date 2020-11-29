@@ -1,8 +1,7 @@
 #include "DrawingWindow.h"
-#include "CanvasPoint.h"
 #include "CanvasLine.h"
 #include "CanvasTriangle.h"
-#include "ModelPoint.h"
+#include "ModelTriangle.h"
 #include "Utils.h"
 
 #define WIDTH 512
@@ -39,10 +38,8 @@ int main(int argc, char *argv[]) {
 	ModelPoint pointA = ModelPoint(0, 0, 0, Colour(255, 0, 0));
 	ModelPoint pointB = ModelPoint(100, 100, 2, Colour(255, 0, 0));
 	ModelPoint pointC = ModelPoint(-100, 100, 2, Colour(255, 0, 0));
-	CanvasPoint pA = pointA.project(window, camera, 1);
-	CanvasPoint pB = pointB.project(window, camera, 1);
-	CanvasPoint pC = pointC.project(window, camera, 1);
-	CanvasTriangle(pA, pB, pC, Colour(255, 0, 0)).fill(window);
+	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Colour(255, 0, 0));
+	triangle.fill(window, camera, 0.5);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !

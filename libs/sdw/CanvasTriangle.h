@@ -8,7 +8,7 @@
 
 class CanvasTriangle {
 	private:
-		std::vector<CanvasPoint> _vertices{};
+		std::vector<CanvasPoint> _vertices;
 		Colour _colour;
 
 	public:
