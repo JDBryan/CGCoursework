@@ -14,6 +14,10 @@ std::vector<ModelTriangle> ModelObject::getFaces() {
   return _faces;
 }
 
+Material ModelObject::getMaterial() {
+  return _material;
+}
+
 void ModelObject::setMaterial(Material m) {
   _material = m;
 }
@@ -32,5 +36,11 @@ void ModelObject::drawFrame(DrawingWindow &window, Camera &camera, float scalar)
 void ModelObject::fill(DrawingWindow &window, Camera &camera, float scalar) {
   for (ModelTriangle &triangle: _faces) {
     triangle.fill(window, camera, scalar);
+  }
+}
+
+void ModelObject::mapTexture(DrawingWindow &window, Camera &camera, float scalar) {
+  for (ModelTriangle &triangle: _faces) {
+    triangle.mapTexture(window, camera, scalar);
   }
 }

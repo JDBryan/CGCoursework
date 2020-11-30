@@ -18,7 +18,7 @@ class Model {
 
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
     void fill(DrawingWindow &window, Camera &camera, float scalar);
-
+    void fillWithTextures(DrawingWindow &window, Camera &camera, float scalar);
 
   private:
     std::vector<ModelObject> _objects;

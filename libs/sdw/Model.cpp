@@ -103,3 +103,13 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
     object.fill(window, camera, scalar);
   }
 }
+
+void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar) {
+  for (ModelObject object: _objects) {
+    if (object.getMaterial().hasTexture()) {
+      object.mapTexture(window, camera, scalar);
+    } else {
+      object.fill(window, camera, scalar);
+    }
+  }
+}

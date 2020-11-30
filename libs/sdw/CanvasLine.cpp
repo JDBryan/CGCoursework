@@ -60,7 +60,7 @@ void CanvasLine::mapTexture(DrawingWindow &window) {
     return;
   }
   if (length() == 0) {
-    window.setPixelColour(_v0.x(), _v0.y(), _v0.z(), _material.getTexture()->getColourFromPoint(_v0.getTexturePoint().x(), _v0.getTexturePoint().y()));
+    window.setPixelColour(_v0.x(), _v0.y(), _v0.z(), _material.getTexture().getColourFromPoint(_v0.getTexturePoint().x(), _v0.getTexturePoint().y()));
   } else {
     float xDist = _v1.x() - _v0.x();
     float yDist = _v1.y() - _v0.y();
@@ -69,7 +69,7 @@ void CanvasLine::mapTexture(DrawingWindow &window) {
     std::vector<float> yTextVals = interpolateSingleFloats(_v0.getTexturePoint().y(), _v1.getTexturePoint().y(), numberOfSteps);
     std::vector<glm::vec3> positions = interpolateVectors(_v0.getPosition(), _v1.getPosition(), numberOfSteps);
     for (int i = 0; i < numberOfSteps; i++) {
-      window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getTexture()->getColourFromPoint(xTextVals[i], yTextVals[i]));
+      window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getTexture().getColourFromPoint(xTextVals[i], yTextVals[i]));
     }
   }
 }

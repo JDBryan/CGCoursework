@@ -8,22 +8,22 @@ class Material {
   private:
     std::string _name;
     Colour _colour;
-    TextureMap *_texture;
+    TextureMap _texture;
     bool _hasTexture;
 
   public:
     Material();
     Material(std::string name);
     Material(Colour colour);
-    Material(TextureMap &texture);
+    Material(TextureMap texture);
 
     std::string getName();
     Colour getColour();
-    TextureMap *getTexture();
+    TextureMap getTexture();
     bool hasTexture();
 
     void setColour(Colour colour);
-    void setTexture(TextureMap &texture);
+    void setTexture(TextureMap texture);
 
   	friend std::ostream &operator<<(std::ostream &os, const Material &material);
 };

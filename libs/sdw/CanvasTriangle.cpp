@@ -64,16 +64,17 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
   if (!_material.hasTexture()) {
     std::cout << "no texture found for triangle" << std::endl;
   }
-  
+
   float splitRatio = (v1().y() - v0().y()) / (v2().y() - v0().y());
   float xCanv = v0().x() + splitRatio * (v2().x() - v0().x());
   float yCanv = v0().y() + splitRatio * (v2().y() - v0().y());
-  CanvasPoint splitPoint = CanvasPoint(xCanv, yCanv, 0);
+  float zCanv = v0().z() + splitRatio * (v2().z() - v0().z());
+  CanvasPoint splitPoint = CanvasPoint(xCanv, yCanv, zCanv);
   float xText = v0().getTexturePoint().x() + splitRatio * (v2().getTexturePoint().x() - v0().getTexturePoint().x());
   float yText = v0().getTexturePoint().y() + splitRatio * (v2().getTexturePoint().y() - v0().getTexturePoint().y());
   splitPoint.setTexturePoint(xText, yText);
 
-  int topHalfSteps = (v1().y() - v0().y()) + 1;
+  int topHalfSteps = (v1().y() - v0().y()) + 2;
   std::vector<glm::vec3> positions01 = interpolateVectors(v0().getPosition(), v1().getPosition(), topHalfSteps);
   std::vector<glm::vec3> tPositions01 = interpolateVectors(v0().getTextPosition(), v1().getTextPosition(), topHalfSteps);
   std::vector<glm::vec3> positions02 = interpolateVectors(v0().getPosition(), splitPoint.getPosition(), topHalfSteps);
@@ -88,7 +89,7 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
     line.mapTexture(window);
   }
 
-  int bottomHalfSteps = (v2().y() - v1().y()) + 1;
+  int bottomHalfSteps = (v2().y() - v1().y()) + 2;
   std::vector<glm::vec3> positions12 = interpolateVectors(v1().getPosition(), v2().getPosition(), bottomHalfSteps);
   std::vector<glm::vec3> tPositions12 = interpolateVectors(v1().getTextPosition(), v2().getTextPosition(), bottomHalfSteps);
   positions02 = interpolateVectors(splitPoint.getPosition(), v2().getPosition(), bottomHalfSteps);
