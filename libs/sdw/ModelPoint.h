@@ -23,6 +23,7 @@ class ModelPoint {
     float z();
 
     void setTexturePoint(float x, float y);
+    void setTexturePoint(TexturePoint t);
 
     CanvasPoint project(DrawingWindow &window, Camera &camera, float scalar);
 

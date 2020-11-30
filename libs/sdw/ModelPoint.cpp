@@ -38,6 +38,10 @@ void ModelPoint::setTexturePoint(float x, float y) {
 	_texturePoint = TexturePoint(x, y);
 }
 
+void ModelPoint::setTexturePoint(TexturePoint t) {
+	_texturePoint = t;
+}
+
 CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {
   float canvasX = camera.getFocalLength() * ((camera.x()-x())/(z()-camera.z()));
   float canvasY = camera.getFocalLength() * ((y()-camera.y())/(z()-camera.z()));

@@ -17,6 +17,7 @@ class Material {
     Material(Colour colour);
     Material(TextureMap &texture);
 
+    std::string getName();
     Colour getColour();
     TextureMap *getTexture();
     bool hasTexture();

@@ -1,7 +1,7 @@
 #include "DrawingWindow.h"
 #include "CanvasLine.h"
 #include "CanvasTriangle.h"
-#include "ModelTriangle.h"
+#include "Model.h"
 #include "Utils.h"
 
 #define WIDTH 512
@@ -43,16 +43,13 @@ int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
+	Model cornellBox = Model("assets/", "cornell-box.obj", 1);
 	SDL_Event event;
 
-	ModelPoint pointA = ModelPoint(0, 200, 0);
-	ModelPoint pointB = ModelPoint(200, -200, 2);
-	ModelPoint pointC = ModelPoint(-200, -50, 2);
-	pointA.setTexturePoint(195, 5);
-	pointB.setTexturePoint(395, 380);
-	pointC.setTexturePoint(65, 330);
-	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(texture));
-	triangle.mapTexture(window, camera, 1);
+	std::cout << cornellBox.getObjects()[0].getFaces()[0].v0() << std::endl;
+	std::cout << cornellBox.getObjects()[0].getFaces()[0].v1() << std::endl;
+	std::cout << cornellBox.getObjects()[0].getFaces()[0].v2() << std::endl;
+
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !

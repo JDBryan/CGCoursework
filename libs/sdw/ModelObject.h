@@ -21,6 +21,7 @@ class ModelObject {
     std::string getName();
     std::vector<ModelTriangle> getFaces();
 
+    void setMaterial(Material m);
     void addFace(ModelPoint v0, ModelPoint v1, ModelPoint v2);
 
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
