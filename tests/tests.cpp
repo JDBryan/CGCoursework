@@ -5,6 +5,7 @@
 #include "test-point.cpp"
 #include "test-utils.cpp"
 #include "test-colour.cpp"
+#include "test-material.cpp"
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

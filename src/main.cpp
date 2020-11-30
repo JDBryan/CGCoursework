@@ -7,16 +7,22 @@
 #define WIDTH 512
 #define HEIGHT 512
 
-void update(DrawingWindow &window) {
-
+void update(DrawingWindow &window, Camera &camera, Model &model) {
+	window.clearPixels();
+	model.fill(window, camera, 500);
 }
 
-void handleEvent(SDL_Event event, DrawingWindow &window) {
+void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_LEFT) {
+			camera.translate(-1,0,0);
 		} else if (event.key.keysym.sym == SDLK_RIGHT) {
+			camera.translate(1,0,0);
 		} else if (event.key.keysym.sym == SDLK_UP) {
+			camera.translate(0,1,0);
 		} else if (event.key.keysym.sym == SDLK_DOWN) {
+			camera.translate(0,-1,0);
+
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			window.savePPM("output.ppm");
 		} else if (event.key.keysym.sym == SDLK_u) {
@@ -43,18 +49,16 @@ int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
-	Model cornellBox = Model("assets/", "cornell-box.obj", 1);
+	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
 
-	std::cout << cornellBox.getObjects()[0].getFaces()[0].v0() << std::endl;
-	std::cout << cornellBox.getObjects()[0].getFaces()[0].v1() << std::endl;
-	std::cout << cornellBox.getObjects()[0].getFaces()[0].v2() << std::endl;
-
+	cornellBox.fill(window, camera, 500);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
-		if (window.pollForInputEvents(event)) handleEvent(event, window);
-		update(window);
+		if (window.pollForInputEvents(event)) handleEvent(event, window, camera);
+		update(window, camera, cornellBox);
+
 		// Need to render the frame at the end, or nothing actually gets shown on the screen !
 		window.renderFrame();
 	}

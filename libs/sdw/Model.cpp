@@ -13,7 +13,7 @@ Model::Model(std::string fileLocation, std::string fileName, float scalar) {
   while (std::getline(infile, line)) {
     std::vector<std::string> tokens = split(line, ' ');
     if (tokens[0] == "mtllib") {
-      std::map<std::string, Material> materials = loadMaterials(fileLocation, tokens[1]);
+      materials = loadMaterials(fileLocation, tokens[1]);
 
     } else if (tokens[0] == "o") {
       if (!currentObjectIsNull) {
@@ -24,7 +24,6 @@ Model::Model(std::string fileLocation, std::string fileName, float scalar) {
 
     } else if (tokens[0] == "usemtl") {
       currentObject.setMaterial(materials[tokens[1]]);
-
 
     } else if (tokens[0] == "v") {
       ModelPoint vertex = ModelPoint(std::stof(tokens[1])*scalar, std::stof(tokens[2])*scalar, std::stof(tokens[3])*scalar);
@@ -73,8 +72,7 @@ std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, s
       currentMaterialIsNull = false;
 
     } else if (tokens[0] == "Kd") {
-      std::vector<std::string> kdTokens = split(line, ' ');
-      Colour colour = Colour(std::stof(kdTokens[1])*255, std::stof(kdTokens[2])*255, std::stof(kdTokens[3])*255);
+      Colour colour = Colour(std::stof(tokens[1])*255, std::stof(tokens[2])*255, std::stof(tokens[3])*255);
       currentMaterial.setColour(colour);
 
     } else if (tokens[0] == "map_Kd"){
@@ -86,6 +84,7 @@ std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, s
   if (!currentMaterialIsNull) {
     materials[currentMaterial.getName()] = currentMaterial;
   }
+
   return materials;
 }
 
