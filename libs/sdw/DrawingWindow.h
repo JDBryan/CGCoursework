@@ -19,7 +19,7 @@ private:
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
 	std::vector<uint32_t> pixelBuffer;
-	std::vector<uint32_t> depthBuffer;
+	std::vector<float> depthBuffer;
 
 
 public:
@@ -29,7 +29,7 @@ public:
 	void savePPM(const std::string &filename) const;
 	void saveBMP(const std::string &filename) const;
 	bool pollForInputEvents(SDL_Event &event);
-	void setPixelColour(size_t x, size_t y, Colour colour);
+	void setPixelColour(size_t x, size_t y, float z, Colour colour);
 	void clearPixels();
 };
 

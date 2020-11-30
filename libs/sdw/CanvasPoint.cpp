@@ -59,7 +59,7 @@ void CanvasPoint::setTexturePoint(float x, float y) {
 
 //OTHER METHODS
 void CanvasPoint::draw(DrawingWindow &window) {
-	window.setPixelColour(_position.x, _position.y, _material.getColour());
+	window.setPixelColour(_position.x, _position.y, _position.z, _material.getColour());
 }
 
 std::ostream &operator<<(std::ostream &os, const CanvasPoint &point) {
