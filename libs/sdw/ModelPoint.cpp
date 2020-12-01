@@ -43,12 +43,23 @@ void ModelPoint::setTexturePoint(TexturePoint t) {
 }
 
 CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {
-  float canvasX = camera.getFocalLength() * ((camera.x()-x())/(z()-camera.z()));
-  float canvasY = camera.getFocalLength() * ((y()-camera.y())/(z()-camera.z()));
-  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, z()-camera.z(), _material);
+  glm::vec3 pos = getPosition() - camera.getPosition();
+  glm::vec3 orientedPoint = pos * camera.getOrientation();
+  float canvasX = camera.getFocalLength() * ((-orientedPoint.x)/(orientedPoint.z));
+  float canvasY = camera.getFocalLength() * (orientedPoint.y/orientedPoint.z);
+  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, orientedPoint.z-camera.z(), _material);
   point.setTexturePoint(_texturePoint.x(), _texturePoint.y());
   return point;
 }
+
+// CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {
+//   glm::vec3 orientedPoint = getPosition() * camera.getOrientation();
+//   float canvasX = camera.getFocalLength() * ((camera.x()-orientedPoint.x)/(orientedPoint.z-camera.z()));
+//   float canvasY = camera.getFocalLength() * ((orientedPoint.y-camera.y())/(orientedPoint.z-camera.z()));
+//   CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, orientedPoint.z-camera.z(), _material);
+//   point.setTexturePoint(_texturePoint.x(), _texturePoint.y());
+//   return point;
+// }
 
 std::ostream &operator<<(std::ostream &os, const ModelPoint &point) {
 	os << "(" << point._position.x << ", "<< point._position.y << ", " << point._position.z << ")";

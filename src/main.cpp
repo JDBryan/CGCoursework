@@ -9,19 +9,27 @@
 
 void update(DrawingWindow &window, Camera &camera, Model &model) {
 	window.clearPixels();
-	model.fillWithTextures(window, camera, 500);
+	model.drawFrame(window, camera, 500);
 }
 
 void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_LEFT) {
-			camera.translate(-1,0,0);
+			camera.pan(0.1);
 		} else if (event.key.keysym.sym == SDLK_RIGHT) {
-			camera.translate(1,0,0);
+			camera.pan(-0.1);
 		} else if (event.key.keysym.sym == SDLK_UP) {
-			camera.translate(0,0,-1);
+			camera.tilt(0.1);
 		} else if (event.key.keysym.sym == SDLK_DOWN) {
+			camera.tilt(-0.1);
+		} else if (event.key.keysym.sym == SDLK_w) {
+			camera.translate(0,0,-1);
+		} else if (event.key.keysym.sym == SDLK_a) {
+			camera.roll(-0.1);
+		} else if (event.key.keysym.sym == SDLK_s) {
 			camera.translate(0,0,1);
+		} else if (event.key.keysym.sym == SDLK_d) {
+			camera.roll(0.1);
 
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			window.savePPM("output.ppm");
@@ -49,10 +57,10 @@ int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
-	Model cornellBox = Model("assets/", "textured-cornell-box.obj", 0.17);
+	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
 
-	cornellBox.fillWithTextures(window, camera, 500);
+	cornellBox.drawFrame(window, camera, 500);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
