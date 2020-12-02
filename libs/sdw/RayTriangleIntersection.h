@@ -4,6 +4,7 @@
 #include <iostream>
 #include "ModelTriangle.h"
 #include <ostream>
+#include <limits>
 
 class RayTriangleIntersection {
 	private:

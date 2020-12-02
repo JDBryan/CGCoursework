@@ -1,6 +1,8 @@
+#pragma once
+
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "ModelTriangle.h"
+#include "Model.h"
 #include "RayTriangleIntersection.h"
 #include "Utils.h"
 
@@ -14,3 +16,5 @@ class Ray {
 
     RayTriangleIntersection findTriangleIntersection(ModelTriangle triangle, Camera camera);
 };
+
+RayTriangleIntersection getClosestIntersection(std::vector<RayTriangleIntersection> intersections);

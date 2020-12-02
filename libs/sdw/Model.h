@@ -7,6 +7,7 @@
 #include <iostream>
 #include "ModelObject.h"
 #include "Utils.h"
+#include "Ray.h"
 
 
 class Model {
@@ -18,6 +19,7 @@ class Model {
 
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
     void fill(DrawingWindow &window, Camera &camera, float scalar);
+    void fillRayTracing(DrawingWindow &window, Camera &camera, float scalar);
     void fillWithTextures(DrawingWindow &window, Camera &camera, float scalar);
 
   private:

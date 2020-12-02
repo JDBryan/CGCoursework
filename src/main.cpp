@@ -56,25 +56,11 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
 
 int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-	Camera camera = Camera(0, 0, 4, 2);
+	Camera camera = Camera(0, 0, 0.5, 0.25);
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
-
-	ModelPoint pointA = ModelPoint(-100, 100, 0);
-	ModelPoint pointB = ModelPoint(100, 100, 0);
-	ModelPoint pointC = ModelPoint(0, -100, 0);
-	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(Colour(255,0,0)));
-	//triangle.drawFrame(window, camera, 1);
-	for (int x = 0; x < window.width; x++) {
-		for (int y = 0; y < window.width; y++) {
-			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
-			RayTriangleIntersection intersection = ray.findTriangleIntersection(triangle, camera);
-			if (!intersection.isNull()) {
-				window.setPixelColour(x, y, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
-			}
-		}
-	}
+	cornellBox.fillRayTracing(window, camera, 1);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !

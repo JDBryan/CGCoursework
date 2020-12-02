@@ -2,6 +2,7 @@
 
 RayTriangleIntersection::RayTriangleIntersection() {
 	_isNull = true;
+	_distanceFromCamera = std::numeric_limits<float>::infinity();
 }
 
 RayTriangleIntersection::RayTriangleIntersection(const glm::vec3 &point, float distance, const ModelTriangle &triangle) {

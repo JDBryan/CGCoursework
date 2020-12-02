@@ -104,6 +104,28 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
   }
 }
 
+void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) {
+  for (int x = 0; x < window.width; x++) {
+		for (int y = 0; y < window.height; y++) {
+			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
+      std::vector<RayTriangleIntersection> intersections;
+      for (ModelObject object: getObjects()) {
+        for (ModelTriangle triangle: object.getFaces()) {
+
+          intersections.push_back(ray.findTriangleIntersection(triangle, camera));
+        }
+      }
+			RayTriangleIntersection intersection = getClosestIntersection(intersections);
+
+			if (!intersection.isNull()) {
+        std::cout << intersection << std::endl;
+				window.setPixelColour(x, y, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+			}
+		}
+  }
+  std::cout << "done" << std::endl;
+}
+
 void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar) {
   for (ModelObject object: _objects) {
     if (object.getMaterial().hasTexture()) {

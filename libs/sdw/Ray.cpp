@@ -7,7 +7,7 @@ Ray::Ray(glm::vec3 pVector, glm::vec3 dVector) {
 
 Ray::Ray(DrawingWindow &window, Camera &camera, CanvasPoint pixel) {
   _position = glm::vec3(camera.x(), camera.y(), camera.z());
-  glm::vec3 pixelPosition = glm::vec3(pixel.x()-window.width/2, window.height/2-pixel.y(), camera.getFocalLength());
+  glm::vec3 pixelPosition = glm::vec3(pixel.x()-window.width/2, window.height/2-pixel.y(), camera.z()-camera.getFocalLength());
   _direction = (pixelPosition - _position);
 }
 
@@ -22,4 +22,17 @@ RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle, Ca
   }
   glm::vec3 r = triangle.v0().getPosition() + (possibleSolution[1] * e0) + (possibleSolution[2] * e1);
   return RayTriangleIntersection(r, possibleSolution[0], triangle);
+}
+
+
+RayTriangleIntersection getClosestIntersection(std::vector<RayTriangleIntersection> intersections) {
+  RayTriangleIntersection closestIntersection;
+  float currentShortestDistance = std::numeric_limits<float>::infinity();
+  for (RayTriangleIntersection intersection: intersections) {
+    if (intersection.getDistanceFromCamera() < currentShortestDistance && intersection.getDistanceFromCamera() > 0) {
+      currentShortestDistance = intersection.getDistanceFromCamera();
+      closestIntersection = intersection;
+    }
+  }
+  return closestIntersection;
 }
