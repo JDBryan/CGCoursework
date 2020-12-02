@@ -10,7 +10,7 @@
 
 void update(DrawingWindow &window, Camera &camera, Model &model) {
 	window.clearPixels();
-	model.drawFrame(window, camera, 500);
+	model.fill(window, camera, 1);
 }
 
 void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
@@ -56,11 +56,12 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
 
 int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-	Camera camera = Camera(0, 0, 0.5, 0.25);
+	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
-	cornellBox.fillRayTracing(window, camera, 1);
+	cornellBox.fillRayTracing(window, camera, 500);
+	//cornellBox.fill(window, camera, 1);
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !

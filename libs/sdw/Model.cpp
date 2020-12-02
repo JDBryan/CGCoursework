@@ -105,8 +105,10 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
 }
 
 void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) {
-  for (int x = 0; x < window.width; x++) {
-		for (int y = 0; y < window.height; y++) {
+  float ratioA = (scalar - 1) / (2 * scalar);
+  float ratioB = (scalar + 1) / (2 * scalar);
+  for (float x = ratioA*window.width; x < ratioB*window.width; x+= 1/scalar) {
+		for (float y = ratioA*window.height; y < ratioB*window.height; y+= 1/scalar) {
 			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
       std::vector<RayTriangleIntersection> intersections;
       for (ModelObject object: getObjects()) {
@@ -118,8 +120,9 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) 
 			RayTriangleIntersection intersection = getClosestIntersection(intersections);
 
 			if (!intersection.isNull()) {
-        std::cout << intersection << std::endl;
-				window.setPixelColour(x, y, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+        float scaledX = (x - (window.width/2))*scalar + (window.width/2);
+        float scaledY = (y - (window.height/2))*scalar + (window.height/2);
+				window.setPixelColour(scaledX, scaledY, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
 			}
 		}
   }
