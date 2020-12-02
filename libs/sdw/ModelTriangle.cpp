@@ -28,6 +28,10 @@ ModelPoint ModelTriangle::v2() {
 	return _vertices[2];
 }
 
+Material ModelTriangle::getMaterial() {
+  return _material;
+}
+
 CanvasTriangle ModelTriangle::project(DrawingWindow &window, Camera &camera, float scalar) {
   CanvasPoint projectedV0 = v0().project(window, camera, scalar);
   CanvasPoint projectedV1 = v1().project(window, camera, scalar);

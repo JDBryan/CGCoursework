@@ -2,6 +2,7 @@
 #include "CanvasLine.h"
 #include "CanvasTriangle.h"
 #include "Model.h"
+#include "Ray.h"
 #include "Utils.h"
 
 #define WIDTH 512
@@ -60,12 +61,25 @@ int main(int argc, char *argv[]) {
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
 
-	cornellBox.drawFrame(window, camera, 500);
+	ModelPoint pointA = ModelPoint(-100, 100, 0);
+	ModelPoint pointB = ModelPoint(100, 100, 0);
+	ModelPoint pointC = ModelPoint(0, -100, 0);
+	ModelTriangle triangle = ModelTriangle(pointA, pointB, pointC, Material(Colour(255,0,0)));
+	//triangle.drawFrame(window, camera, 1);
+	for (int x = 0; x < window.width; x++) {
+		for (int y = 0; y < window.width; y++) {
+			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
+			RayTriangleIntersection intersection = ray.findTriangleIntersection(triangle, camera);
+			if (!intersection.isNull()) {
+				window.setPixelColour(x, y, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+			}
+		}
+	}
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
 		if (window.pollForInputEvents(event)) handleEvent(event, window, camera);
-		update(window, camera, cornellBox);
+		//update(window, camera, cornellBox);
 
 		// Need to render the frame at the end, or nothing actually gets shown on the screen !
 		window.renderFrame();

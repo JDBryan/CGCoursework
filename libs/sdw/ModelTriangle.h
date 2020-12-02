@@ -22,6 +22,7 @@ class ModelTriangle {
 		ModelPoint v0();
 		ModelPoint v1();
 		ModelPoint v2();
+		Material getMaterial();
 
 		CanvasTriangle project(DrawingWindow &window, Camera &camera, float scalar);
 		void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
