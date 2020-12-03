@@ -8,7 +8,8 @@ Ray::Ray(glm::vec3 pVector, glm::vec3 dVector) {
 Ray::Ray(DrawingWindow &window, Camera &camera, CanvasPoint pixel) {
   _position = glm::vec3(camera.x(), camera.y(), camera.z());
   glm::vec3 pixelPosition = glm::vec3(pixel.x()-window.width/2, window.height/2-pixel.y(), camera.z()-camera.getFocalLength());
-  _direction = (pixelPosition - _position);
+
+  _direction = (pixelPosition - _position) * glm::inverse(camera.getOrientation());
 }
 
 RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle, Camera camera) {

@@ -10,10 +10,10 @@
 
 void update(DrawingWindow &window, Camera &camera, Model &model) {
 	window.clearPixels();
-	model.fill(window, camera, 1);
+	model.fillRayTracing(window, camera, 500);
 }
 
-void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
+void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, Model model) {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_LEFT) {
 			camera.pan(0.1);
@@ -51,6 +51,7 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
 			Material material = Material(texture);
       CanvasTriangle(pointA, pointB, pointC, material).mapTexture(window);
     }
+		update(window, camera, model);
 	}
 }
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
-		if (window.pollForInputEvents(event)) handleEvent(event, window, camera);
+		if (window.pollForInputEvents(event)) handleEvent(event, window, camera, cornellBox);
 		//update(window, camera, cornellBox);
 
 		// Need to render the frame at the end, or nothing actually gets shown on the screen !

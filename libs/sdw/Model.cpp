@@ -105,10 +105,10 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
 }
 
 void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) {
-  float ratioA = (scalar - 1) / (2 * scalar);
-  float ratioB = (scalar + 1) / (2 * scalar);
-  for (float x = ratioA*window.width; x < ratioB*window.width; x+= 1/scalar) {
-		for (float y = ratioA*window.height; y < ratioB*window.height; y+= 1/scalar) {
+  float startRatio = (scalar - 1) / (2 * scalar);
+  float endRatio = (scalar + 1) / (2 * scalar);
+  for (float x = startRatio*window.width; x <= endRatio*window.width; x+= 1/(scalar+1)) {
+		for (float y = startRatio*window.height; y <= endRatio*window.height; y+= 1/(scalar+1)) {
 			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
       std::vector<RayTriangleIntersection> intersections;
       for (ModelObject object: getObjects()) {
