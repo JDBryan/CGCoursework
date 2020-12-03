@@ -35,23 +35,11 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, Model m
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			window.savePPM("output.ppm");
 		} else if (event.key.keysym.sym == SDLK_u) {
-			CanvasPoint pointA = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			CanvasPoint pointB = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			CanvasPoint pointC = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			Material material = Material(Colour(randomNumber(0, 256), randomNumber(0, 256), randomNumber(0, 256)));
-      CanvasTriangle(pointA, pointB, pointC, material).fill(window);
+			
     } else if (event.key.keysym.sym == SDLK_f) {
-			CanvasPoint pointA = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			CanvasPoint pointB = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			CanvasPoint pointC = CanvasPoint(randomNumber(0, WIDTH), randomNumber(0, HEIGHT), 0);
-			pointA.setTexturePoint(randomNumber(0, 480), randomNumber(0, 395));
-			pointB.setTexturePoint(randomNumber(0, 480), randomNumber(0, 395));
-			pointC.setTexturePoint(randomNumber(0, 480), randomNumber(0, 395));
-			TextureMap texture = TextureMap("assets/texture.ppm");
-			Material material = Material(texture);
-      CanvasTriangle(pointA, pointB, pointC, material).mapTexture(window);
+
     }
-		update(window, camera, model);
+		//update(window, camera, model);
 	}
 }
 
@@ -61,7 +49,10 @@ int main(int argc, char *argv[]) {
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
 	SDL_Event event;
+	time_t start_time = time(NULL);
 	cornellBox.fillRayTracing(window, camera, 500);
+	time_t end_time = time(NULL);
+	std::cout << end_time - start_time << std::endl;
 	//cornellBox.fill(window, camera, 1);
 
 	while (true) {

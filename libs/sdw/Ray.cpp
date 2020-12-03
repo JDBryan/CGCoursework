@@ -1,8 +1,9 @@
 #include "Ray.h"
 
-Ray::Ray(glm::vec3 pVector, glm::vec3 dVector) {
-  _position = pVector;
-  _direction = dVector;
+Ray::Ray(glm::vec3 start, glm::vec3 end) {
+  _position = start;
+  _direction = end-start;
+  _direction = _direction/glm::length(_direction);
 }
 
 Ray::Ray(DrawingWindow &window, Camera &camera, CanvasPoint pixel) {
@@ -12,10 +13,18 @@ Ray::Ray(DrawingWindow &window, Camera &camera, CanvasPoint pixel) {
   _direction = (pixelPosition - _position) * glm::inverse(camera.getOrientation());
 }
 
-RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle, Camera camera) {
+glm::vec3 Ray::getDirection() {
+  return _direction;
+}
+
+glm::vec3 Ray::getPosition() {
+  return _position;
+}
+
+RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle) {
   glm::vec3 e0 = triangle.v1().getPosition() - triangle.v0().getPosition();
   glm::vec3 e1 = triangle.v2().getPosition() - triangle.v0().getPosition();
-  glm::vec3 SPVector = glm::vec3(camera.x(), camera.y(), camera.z()) - triangle.v0().getPosition();
+  glm::vec3 SPVector = _position - triangle.v0().getPosition();
   glm::mat3 DEMatrix(-_direction, e0, e1);
   glm::vec3 possibleSolution = glm::inverse(DEMatrix) * SPVector;
   if (possibleSolution[1] > 1 || possibleSolution[1] < 0 || possibleSolution[2] > 1 || possibleSolution[2] < 0 || possibleSolution[1] + possibleSolution[2] > 1) {
@@ -30,8 +39,8 @@ RayTriangleIntersection getClosestIntersection(std::vector<RayTriangleIntersecti
   RayTriangleIntersection closestIntersection;
   float currentShortestDistance = std::numeric_limits<float>::infinity();
   for (RayTriangleIntersection intersection: intersections) {
-    if (intersection.getDistanceFromCamera() < currentShortestDistance && intersection.getDistanceFromCamera() > 0) {
-      currentShortestDistance = intersection.getDistanceFromCamera();
+    if (intersection.getDistanceFromOrigin() < currentShortestDistance && intersection.getDistanceFromOrigin() > 0) {
+      currentShortestDistance = intersection.getDistanceFromOrigin();
       closestIntersection = intersection;
     }
   }

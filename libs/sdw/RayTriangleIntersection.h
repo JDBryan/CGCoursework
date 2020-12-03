@@ -9,7 +9,7 @@
 class RayTriangleIntersection {
 	private:
 		glm::vec3 _intersectionPoint;
-		float _distanceFromCamera;
+		float _distanceFromOrigin;
 		ModelTriangle _intersectedTriangle;
 		bool _isNull;
 
@@ -18,7 +18,7 @@ class RayTriangleIntersection {
 		RayTriangleIntersection(const glm::vec3 &point, float distance, const ModelTriangle &triangle);
 
 		bool isNull();
-		float getDistanceFromCamera();
+		float getDistanceFromOrigin();
 		ModelTriangle getIntersectedTriangle();
 		glm::vec3 getIntersectionPoint();
 

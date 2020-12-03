@@ -105,24 +105,24 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
 }
 
 void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) {
+  glm::vec3 light = glm::vec3(0,0,1);
   float startRatio = (scalar - 1) / (2 * scalar);
   float endRatio = (scalar + 1) / (2 * scalar);
+
   for (float x = startRatio*window.width; x <= endRatio*window.width; x+= 1/(scalar+1)) {
 		for (float y = startRatio*window.height; y <= endRatio*window.height; y+= 1/(scalar+1)) {
 			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
-      std::vector<RayTriangleIntersection> intersections;
-      for (ModelObject object: getObjects()) {
-        for (ModelTriangle triangle: object.getFaces()) {
-
-          intersections.push_back(ray.findTriangleIntersection(triangle, camera));
-        }
-      }
-			RayTriangleIntersection intersection = getClosestIntersection(intersections);
-
+			RayTriangleIntersection intersection = findIntersection(ray);
 			if (!intersection.isNull()) {
+        Ray shadowRay = Ray(light, intersection.getIntersectionPoint());
+  			RayTriangleIntersection lightIntersection = findIntersection(shadowRay);
         float scaledX = (x - (window.width/2))*scalar + (window.width/2);
         float scaledY = (y - (window.height/2))*scalar + (window.height/2);
-				window.setPixelColour(scaledX, scaledY, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+        if(!lightIntersection.isNull() && 0.001 <= glm::length(intersection.getIntersectionPoint()-lightIntersection.getIntersectionPoint())) {
+          window.setPixelColour(scaledX, scaledY, 0, Colour(0,0,0));
+        } else {
+          window.setPixelColour(scaledX, scaledY, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+        }
 			}
 		}
   }
@@ -137,4 +137,14 @@ void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar
       object.fill(window, camera, scalar);
     }
   }
+}
+
+RayTriangleIntersection Model::findIntersection(Ray ray) {
+  std::vector<RayTriangleIntersection> intersections;
+  for (ModelObject object: getObjects()) {
+    for (ModelTriangle triangle: object.getFaces()) {
+      intersections.push_back(ray.findTriangleIntersection(triangle));
+    }
+  }
+  return getClosestIntersection(intersections);
 }

@@ -17,6 +17,8 @@ class Model {
 
     std::vector<ModelObject> getObjects();
 
+    RayTriangleIntersection findIntersection(Ray ray);
+
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
     void fill(DrawingWindow &window, Camera &camera, float scalar);
     void fillRayTracing(DrawingWindow &window, Camera &camera, float scalar);
