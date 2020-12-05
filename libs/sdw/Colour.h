@@ -17,7 +17,8 @@ class Colour {
 		int red();
 		int green();
 		int blue();
-		
+
+		Colour intensity(float i);
 		uint32_t pack();
 		friend std::ostream &operator<<(std::ostream &os, const Colour &colour);
 };

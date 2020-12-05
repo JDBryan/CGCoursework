@@ -8,12 +8,18 @@
 #define WIDTH 512
 #define HEIGHT 512
 
-void update(DrawingWindow &window, Camera &camera, Model &model) {
+void update(DrawingWindow &window, Camera &camera, Model &model, int renderType) {
 	window.clearPixels();
-	model.fillRayTracing(window, camera, 500);
+	if (renderType == 0) {
+		model.drawFrame(window, camera, 500);
+	} else if (renderType == 1) {
+		model.fill(window, camera, 500);
+	} else if (renderType == 2) {
+		model.fillRayTracing(window, camera, 500, "all");
+	}
 }
 
-void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, Model model) {
+int handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, int renderType, Model model) {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_LEFT) {
 			camera.pan(0.1);
@@ -26,21 +32,28 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, Model m
 		} else if (event.key.keysym.sym == SDLK_w) {
 			camera.translate(0,0,-1);
 		} else if (event.key.keysym.sym == SDLK_a) {
-			camera.roll(-0.1);
+			camera.translate(-1,0,0);
 		} else if (event.key.keysym.sym == SDLK_s) {
 			camera.translate(0,0,1);
 		} else if (event.key.keysym.sym == SDLK_d) {
+			camera.translate(1,0,0);
+		} else if (event.key.keysym.sym == SDLK_q) {
+			camera.roll(-0.1);
+		} else if (event.key.keysym.sym == SDLK_e) {
 			camera.roll(0.1);
-
+		} else if (event.key.keysym.sym == SDLK_z) {
+			camera.translate(0,1,0);
+		} else if (event.key.keysym.sym == SDLK_x) {
+			camera.translate(0,-1,0);
 		} else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			window.savePPM("output.ppm");
-		} else if (event.key.keysym.sym == SDLK_u) {
-			
-    } else if (event.key.keysym.sym == SDLK_f) {
-
+		} else if (event.key.keysym.sym == SDLK_r) {
+			renderType += 1;
+			if (renderType == 3) {renderType = 0;}
     }
-		//update(window, camera, model);
+		update(window, camera, model, renderType);
 	}
+	return renderType;
 }
 
 int main(int argc, char *argv[]) {
@@ -48,17 +61,16 @@ int main(int argc, char *argv[]) {
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
+	cornellBox.fillRayTracing(window, camera, 500, "specular");
+	int renderType = 0;
 	SDL_Event event;
-	time_t start_time = time(NULL);
-	cornellBox.fillRayTracing(window, camera, 500);
-	time_t end_time = time(NULL);
-	std::cout << end_time - start_time << std::endl;
-	//cornellBox.fill(window, camera, 1);
+
+
 
 	while (true) {
 		// We MUST poll for events - otherwise the window will freeze !
-		if (window.pollForInputEvents(event)) handleEvent(event, window, camera, cornellBox);
-		//update(window, camera, cornellBox);
+		if (window.pollForInputEvents(event)) renderType = handleEvent(event, window, camera, renderType, cornellBox);
+
 
 		// Need to render the frame at the end, or nothing actually gets shown on the screen !
 		window.renderFrame();

@@ -104,25 +104,73 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
   }
 }
 
-void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar) {
+void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lighting) {
   glm::vec3 light = glm::vec3(0,0,1);
   float startRatio = (scalar - 1) / (2 * scalar);
   float endRatio = (scalar + 1) / (2 * scalar);
 
+  std::vector<ModelTriangle> faces;
+  for (ModelObject object: _objects) {
+    for (ModelTriangle triangle: object.getFaces()) {
+      std::cout << object.getName() << std::endl;
+      std::cout << glm::to_string(triangle.getNormal()) << std::endl;
+      faces.push_back(triangle);
+    }
+  }
+
   for (float x = startRatio*window.width; x <= endRatio*window.width; x+= 1/(scalar+1)) {
 		for (float y = startRatio*window.height; y <= endRatio*window.height; y+= 1/(scalar+1)) {
+
 			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
-			RayTriangleIntersection intersection = findIntersection(ray);
+			RayTriangleIntersection intersection = getClosestIntersection(ray, faces);
+
 			if (!intersection.isNull()) {
-        Ray shadowRay = Ray(light, intersection.getIntersectionPoint());
-  			RayTriangleIntersection lightIntersection = findIntersection(shadowRay);
+        Ray lightRay = Ray(light, intersection.getIntersectionPoint());
+  			RayTriangleIntersection lightIntersection = getClosestIntersection(lightRay, faces);
+
         float scaledX = (x - (window.width/2))*scalar + (window.width/2);
         float scaledY = (y - (window.height/2))*scalar + (window.height/2);
-        if(!lightIntersection.isNull() && 0.001 <= glm::length(intersection.getIntersectionPoint()-lightIntersection.getIntersectionPoint())) {
-          window.setPixelColour(scaledX, scaledY, 0, Colour(0,0,0));
+
+        float brightness;
+        glm::vec3 normal = intersection.getIntersectedTriangle().getNormal();
+        Material material = intersection.getIntersectedTriangle().getMaterial();
+        if(!lightIntersection.isNull() && 0.0001 <= glm::length(lightIntersection.getIntersectionPoint()-intersection.getIntersectionPoint())) {
+          brightness = 0;
         } else {
-          window.setPixelColour(scaledX, scaledY, 0, intersection.getIntersectedTriangle().getMaterial().getColour());
+          if (lighting == "proximity") {
+            float r =  glm::length(light - lightIntersection.getIntersectionPoint());
+            brightness = 1 / (4 * M_PI * r * r);
+
+          } else if (lighting == "angle of incidence") {
+            float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
+            brightness = angleOfIncidence;
+
+          } else if (lighting == "specular") {
+            glm::vec3 ri = glm::normalize(lightRay.getDirection());
+            glm::vec3 rr = glm::normalize(ri - normal * (float)(2*glm::dot(ri, normal)));
+            brightness = pow(glm::dot(-ray.getDirection(), rr), 64);
+
+          } else if (lighting == "all") {
+            float r =  glm::length(light - lightIntersection.getIntersectionPoint());
+            float brightness1 = 1 / (4 * M_PI * r * r);
+
+            glm::vec3 normal = intersection.getIntersectedTriangle().getNormal();
+            float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
+            float brightness2 = angleOfIncidence;
+
+            glm::vec3 ri = glm::normalize(lightRay.getDirection());
+            glm::vec3 rr = glm::normalize(ri - normal * (float)(2*glm::dot(ri, normal)));
+            float brightness3 = 3*pow(glm::dot(-ray.getDirection(), rr), 64);
+
+            brightness = (brightness1 + brightness2 + brightness3)/3;
+
+          } else {
+            brightness = 1;
+          }
         }
+        brightness += 0.2;
+        material.setBrightness(brightness);
+        window.hardSetPixelColour(scaledX, scaledY, 0, material.getColour());
 			}
 		}
   }
@@ -139,12 +187,18 @@ void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar
   }
 }
 
-RayTriangleIntersection Model::findIntersection(Ray ray) {
+RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces) {
   std::vector<RayTriangleIntersection> intersections;
-  for (ModelObject object: getObjects()) {
-    for (ModelTriangle triangle: object.getFaces()) {
-      intersections.push_back(ray.findTriangleIntersection(triangle));
+  for (ModelTriangle triangle: faces) {
+    intersections.push_back(ray.findTriangleIntersection(triangle));
+  }
+  RayTriangleIntersection closestIntersection;
+  float currentShortestDistance = std::numeric_limits<float>::infinity();
+  for (RayTriangleIntersection intersection: intersections) {
+    if (intersection.getDistanceFromOrigin() < currentShortestDistance && intersection.getDistanceFromOrigin() > 0) {
+      currentShortestDistance = intersection.getDistanceFromOrigin();
+      closestIntersection = intersection;
     }
   }
-  return getClosestIntersection(intersections);
+  return closestIntersection;
 }

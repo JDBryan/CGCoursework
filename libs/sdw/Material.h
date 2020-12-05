@@ -9,6 +9,7 @@ class Material {
     std::string _name;
     Colour _colour;
     TextureMap _texture;
+    float _brightness;
     bool _hasTexture;
 
   public:
@@ -22,6 +23,7 @@ class Material {
     TextureMap getTexture();
     bool hasTexture();
 
+    void setBrightness(float brightness);
     void setColour(Colour colour);
     void setTexture(TextureMap texture);
 

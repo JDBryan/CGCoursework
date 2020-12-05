@@ -19,5 +19,3 @@ class Ray {
 
     RayTriangleIntersection findTriangleIntersection(ModelTriangle triangle);
 };
-
-RayTriangleIntersection getClosestIntersection(std::vector<RayTriangleIntersection> intersections);

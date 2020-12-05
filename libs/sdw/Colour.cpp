@@ -26,6 +26,16 @@ int Colour::blue() {
 	return _blue;
 }
 
+Colour Colour::intensity(float intensity) {
+  int red = _red * intensity;
+  int green = _green * intensity;
+  int blue = _blue * intensity;
+  if (red > 255) {red = 255;}
+  if (green > 255) {green = 255;}
+  if (blue > 255) {blue = 255;}
+  return Colour(red, green, blue);
+}
+
 uint32_t Colour::pack() {
   return (255 << 24) + (_red << 16) + (_green << 8) + _blue;
 }

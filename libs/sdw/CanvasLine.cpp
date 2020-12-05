@@ -42,7 +42,6 @@ CanvasPoint CanvasLine::findIntersectionWithY(float y) {
 void CanvasLine::draw(DrawingWindow &window) {
   float xDist = _v1.x() - _v0.x();
   float yDist = _v1.y() - _v0.y();
-
   if (length() == 0) {
     window.setPixelColour(_v0.x(), _v0.y(), _v0.z(), _material.getColour());
   } else {

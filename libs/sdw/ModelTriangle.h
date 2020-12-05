@@ -12,6 +12,7 @@ class ModelTriangle {
 
 	private:
 		std::vector<ModelPoint> _vertices;
+		glm::vec3 _normal;
 		Material _material;
 
 	public:
@@ -23,6 +24,7 @@ class ModelTriangle {
 		ModelPoint v1();
 		ModelPoint v2();
 		Material getMaterial();
+		glm::vec3 getNormal();
 
 		CanvasTriangle project(DrawingWindow &window, Camera &camera, float scalar);
 		void drawFrame(DrawingWindow &window, Camera &camera, float scalar);

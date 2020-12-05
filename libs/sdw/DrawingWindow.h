@@ -30,6 +30,7 @@ public:
 	void saveBMP(const std::string &filename) const;
 	bool pollForInputEvents(SDL_Event &event);
 	void setPixelColour(size_t x, size_t y, float z, Colour colour);
+	void hardSetPixelColour(size_t x, size_t y, float z, Colour colour);
 	void clearPixels();
 };
 

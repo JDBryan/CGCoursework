@@ -7,12 +7,14 @@ ModelTriangle::ModelTriangle(ModelPoint v0, ModelPoint v1, ModelPoint v2) {
   _vertices.push_back(v0);
   _vertices.push_back(v1);
   _vertices.push_back(v2);
+  _normal = glm::normalize(glm::cross(v1.getPosition() - v0.getPosition(), v2.getPosition() - v0.getPosition()));
 }
 
 ModelTriangle::ModelTriangle(ModelPoint v0, ModelPoint v1, ModelPoint v2, Material m) {
   _vertices.push_back(v0);
   _vertices.push_back(v1);
   _vertices.push_back(v2);
+  _normal = glm::normalize(glm::cross(v1.getPosition() - v0.getPosition(), v2.getPosition() - v0.getPosition()));
   _material = m;
 }
 
@@ -30,6 +32,10 @@ ModelPoint ModelTriangle::v2() {
 
 Material ModelTriangle::getMaterial() {
   return _material;
+}
+
+glm::vec3 ModelTriangle::getNormal() {
+  return _normal;
 }
 
 CanvasTriangle ModelTriangle::project(DrawingWindow &window, Camera &camera, float scalar) {
