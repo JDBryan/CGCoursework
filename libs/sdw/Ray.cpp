@@ -19,6 +19,14 @@ glm::vec3 Ray::getPosition() {
   return _position;
 }
 
+Ray Ray::reflect(RayTriangleIntersection point) {
+   glm::vec3 normal = point.getIntersectedTriangle().getNormal();
+   glm::vec3 newDirection = glm::normalize(_direction - normal * (float)(2*glm::dot(_direction, normal)));
+   glm::vec3 start = point.getIntersectionPoint();
+   glm::vec3 end = start + newDirection;
+   return Ray(start + 0.001f * normal, end);
+}
+
 RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle) {
   glm::vec3 e0 = triangle.v1().getPosition() - triangle.v0().getPosition();
   glm::vec3 e1 = triangle.v2().getPosition() - triangle.v0().getPosition();
@@ -29,5 +37,5 @@ RayTriangleIntersection Ray::findTriangleIntersection(ModelTriangle triangle) {
     return RayTriangleIntersection();
   }
   glm::vec3 r = triangle.v0().getPosition() + (possibleSolution[1] * e0) + (possibleSolution[2] * e1);
-  return RayTriangleIntersection(r, possibleSolution[0], triangle);
+  return RayTriangleIntersection(r, possibleSolution[0], possibleSolution[1], possibleSolution[2], triangle);
 }

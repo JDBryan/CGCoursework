@@ -12,15 +12,19 @@ class RayTriangleIntersection {
 		float _distanceFromOrigin;
 		ModelTriangle _intersectedTriangle;
 		bool _isNull;
+		float _v0Distance;
+		float _v1Distance;
+		float _v2Distance;
 
 	public:
 		RayTriangleIntersection();
-		RayTriangleIntersection(const glm::vec3 &point, float distance, const ModelTriangle &triangle);
+		RayTriangleIntersection(const glm::vec3 &point, float distance, float u, float v, const ModelTriangle &triangle);
 
 		bool isNull();
 		float getDistanceFromOrigin();
 		ModelTriangle getIntersectedTriangle();
 		glm::vec3 getIntersectionPoint();
+		glm::vec3 getNormal();
 
 		friend std::ostream& operator<<(std::ostream &os, const RayTriangleIntersection &rti);
 };

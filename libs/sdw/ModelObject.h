@@ -12,7 +12,7 @@ class ModelObject {
   private:
     std::string _name;
     std::vector<ModelTriangle> _faces;
-    Material _material;
+    Material _material = Material(Colour(255,0,0));
 
   public:
     ModelObject();

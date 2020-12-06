@@ -5,7 +5,10 @@ RayTriangleIntersection::RayTriangleIntersection() {
 	_distanceFromOrigin = std::numeric_limits<float>::infinity();
 }
 
-RayTriangleIntersection::RayTriangleIntersection(const glm::vec3 &point, float distance, const ModelTriangle &triangle) {
+RayTriangleIntersection::RayTriangleIntersection(const glm::vec3 &point, float distance, float u, float v, const ModelTriangle &triangle) {
+	_v1Distance = u;
+	_v2Distance = v;
+	_v0Distance = 1.0f - (_v1Distance + _v2Distance);
 	_intersectionPoint = point;
 	_distanceFromOrigin = distance;
 	_intersectedTriangle = triangle;
@@ -26,6 +29,19 @@ glm::vec3 RayTriangleIntersection::getIntersectionPoint() {
 
 ModelTriangle RayTriangleIntersection::getIntersectedTriangle() {
 	return _intersectedTriangle;
+}
+
+glm::vec3 RayTriangleIntersection::getNormal() {
+	if (_intersectedTriangle.v0().hasNormal() && _intersectedTriangle.v1().hasNormal() && _intersectedTriangle.v2().hasNormal()) {
+		glm::vec3 v0Norm = _intersectedTriangle.v0().getNormal();
+		glm::vec3 v1Norm = _intersectedTriangle.v1().getNormal();
+		glm::vec3 v2Norm = _intersectedTriangle.v2().getNormal();
+		glm::vec3 normal = v0Norm * _v0Distance + v1Norm * _v1Distance + v2Norm * _v2Distance;
+		return glm::normalize(normal);
+
+	} else {
+		return _intersectedTriangle.getNormal();
+	}
 }
 
 std::ostream &operator<<(std::ostream &os, const RayTriangleIntersection &rti) {

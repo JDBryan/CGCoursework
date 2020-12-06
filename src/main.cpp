@@ -60,8 +60,10 @@ int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
+	Model sphere = Model("assets/", "sphere.obj", 0.17);
 	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
-	cornellBox.fillRayTracing(window, camera, 500, "specular");
+	cornellBox.merge(sphere);
+	cornellBox.drawFrame(window, camera, 500);
 	int renderType = 0;
 	SDL_Event event;
 

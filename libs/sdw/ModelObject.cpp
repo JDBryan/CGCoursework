@@ -4,6 +4,7 @@ ModelObject::ModelObject() = default;
 
 ModelObject::ModelObject(std::string name) {
   _name = name;
+  _material = Material(Colour(255,0,0));
 }
 
 std::string ModelObject::getName() {

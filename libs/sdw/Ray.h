@@ -17,5 +17,6 @@ class Ray {
     glm::vec3 getDirection();
     glm::vec3 getPosition();
 
+    Ray reflect(RayTriangleIntersection point);
     RayTriangleIntersection findTriangleIntersection(ModelTriangle triangle);
 };

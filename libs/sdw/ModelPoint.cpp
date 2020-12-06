@@ -8,6 +8,8 @@ ModelPoint::ModelPoint(float x, float y, float z) {
   _position.z = z;
   _material = Material(Colour(0, 0, 0));
   _texturePoint = TexturePoint(-1,-1);
+  _hasNormal = false;
+
 }
 
 ModelPoint::ModelPoint(float x, float y, float z, Material m) {
@@ -16,10 +18,15 @@ ModelPoint::ModelPoint(float x, float y, float z, Material m) {
   _position.z = z;
   _material = m;
   _texturePoint = TexturePoint(-1,-1);
+  _hasNormal = false;
 }
 
 glm::vec3 ModelPoint::getPosition() {
   return _position;
+}
+
+glm::vec3 ModelPoint::getNormal() {
+  return _normal;
 }
 
 float ModelPoint::x() {
@@ -34,12 +41,21 @@ float ModelPoint::z() {
   return _position.z;
 }
 
+bool ModelPoint::hasNormal() {
+  return _hasNormal;
+}
+
 void ModelPoint::setTexturePoint(float x, float y) {
 	_texturePoint = TexturePoint(x, y);
 }
 
 void ModelPoint::setTexturePoint(TexturePoint t) {
 	_texturePoint = t;
+}
+
+void ModelPoint::setNormal(glm::vec3 normal) {
+  _normal = glm::normalize(normal);
+  _hasNormal = true;
 }
 
 CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float scalar) {

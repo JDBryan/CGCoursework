@@ -11,6 +11,7 @@ class Material {
     TextureMap _texture;
     float _brightness;
     bool _hasTexture;
+    float _reflectivity;
 
   public:
     Material();
@@ -21,11 +22,13 @@ class Material {
     std::string getName();
     Colour getColour();
     TextureMap getTexture();
+    float getReflectivity();
     bool hasTexture();
 
     void setBrightness(float brightness);
     void setColour(Colour colour);
     void setTexture(TextureMap texture);
+    void setReflectivity(float reflectivity);
 
   	friend std::ostream &operator<<(std::ostream &os, const Material &material);
 };

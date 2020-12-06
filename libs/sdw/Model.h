@@ -19,8 +19,9 @@ class Model {
 
     std::vector<ModelObject> getObjects();
 
-    RayTriangleIntersection findIntersection(Ray ray);
+    RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces);
 
+    void merge(Model secondModel);
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
     void fill(DrawingWindow &window, Camera &camera, float scalar);
     void fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lighting);
@@ -29,5 +30,3 @@ class Model {
   private:
     std::vector<ModelObject> _objects;
 };
-
-RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces);

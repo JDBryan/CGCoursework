@@ -3,12 +3,13 @@
 Model::Model(std::string fileLocation, std::string fileName, float scalar) {
   std::map<std::string, Material> materials;
   std::vector<ModelPoint> vertices;
+  std::vector<glm::vec3> normals;
   std::vector<TexturePoint> texturePoints;
 
   std::ifstream infile(fileLocation + fileName);
   std::string line;
   bool currentObjectIsNull = true;
-  ModelObject currentObject;
+  ModelObject currentObject = ModelObject();
 
   while (std::getline(infile, line)) {
     std::vector<std::string> tokens = split(line, ' ');
@@ -29,6 +30,10 @@ Model::Model(std::string fileLocation, std::string fileName, float scalar) {
       ModelPoint vertex = ModelPoint(std::stof(tokens[1])*scalar, std::stof(tokens[2])*scalar, std::stof(tokens[3])*scalar);
       vertices.push_back(vertex);
 
+    } else if (tokens[0] == "vn") {
+      glm::vec3 normal = glm::vec3(std::stof(tokens[1])*scalar, std::stof(tokens[2])*scalar, std::stof(tokens[3])*scalar);
+      normals.push_back(normal);
+
     } else if (tokens[0] == "vt") {
       TexturePoint texturePoint = TexturePoint(std::stof(tokens[1])*480, std::stof(tokens[2])*395);
       texturePoints.push_back(texturePoint);
@@ -45,12 +50,15 @@ Model::Model(std::string fileLocation, std::string fileName, float scalar) {
         v1.setTexturePoint(texturePoints[std::stoi(indicesB[1])-1]);
         v2.setTexturePoint(texturePoints[std::stoi(indicesC[1])-1]);
       }
+      if (indicesA.size() > 2 && indicesA[2] != "") {
+        v0.setNormal(normals[std::stoi(indicesA[2])-1]);
+        v1.setNormal(normals[std::stoi(indicesB[2])-1]);
+        v2.setNormal(normals[std::stoi(indicesC[2])-1]);
+      }
       currentObject.addFace(v0, v1, v2);
     }
   }
-  if (!currentObjectIsNull){
-      _objects.push_back(currentObject);
-  }
+  _objects.push_back(currentObject);
 }
 
 std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, std::string fileName) {
@@ -69,6 +77,9 @@ std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, s
         materials[currentMaterial.getName()] = currentMaterial;
       }
       currentMaterial = Material(tokens[1]);
+      if (tokens[1] == "Blue") {
+        currentMaterial.setReflectivity(1);
+      }
       currentMaterialIsNull = false;
 
     } else if (tokens[0] == "Kd") {
@@ -86,6 +97,12 @@ std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, s
   }
 
   return materials;
+}
+
+void Model::merge(Model secondModel) {
+  for (ModelObject object: secondModel.getObjects()) {
+    _objects.push_back(object);
+  }
 }
 
 std::vector<ModelObject> Model::getObjects() {
@@ -112,28 +129,38 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
   std::vector<ModelTriangle> faces;
   for (ModelObject object: _objects) {
     for (ModelTriangle triangle: object.getFaces()) {
-      std::cout << object.getName() << std::endl;
-      std::cout << glm::to_string(triangle.getNormal()) << std::endl;
       faces.push_back(triangle);
     }
   }
 
+  float counter = 1;
+  int percent = 1;
   for (float x = startRatio*window.width; x <= endRatio*window.width; x+= 1/(scalar+1)) {
 		for (float y = startRatio*window.height; y <= endRatio*window.height; y+= 1/(scalar+1)) {
-
+      counter ++;
+      //std::cout << counter/(window.width*window.height)*100 << std::endl;
+      if ((counter/(window.width*window.height))*100 > percent) {
+        std::cout << (int)(counter/(window.width*window.height)*100) << std::endl;
+        percent += 1;
+      }
 			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
 			RayTriangleIntersection intersection = getClosestIntersection(ray, faces);
+      Material material = intersection.getIntersectedTriangle().getMaterial();
+
+      if (!intersection.isNull() && material.getReflectivity() == 1) {
+        Ray reflectedCameraRay = ray.reflect(intersection);
+        intersection = getClosestIntersection(reflectedCameraRay, faces);
+        ray = reflectedCameraRay;
+      }
+
+      material = intersection.getIntersectedTriangle().getMaterial();
 
 			if (!intersection.isNull()) {
+        glm::vec3 normal = intersection.getNormal();
         Ray lightRay = Ray(light, intersection.getIntersectionPoint());
   			RayTriangleIntersection lightIntersection = getClosestIntersection(lightRay, faces);
-
-        float scaledX = (x - (window.width/2))*scalar + (window.width/2);
-        float scaledY = (y - (window.height/2))*scalar + (window.height/2);
-
         float brightness;
-        glm::vec3 normal = intersection.getIntersectedTriangle().getNormal();
-        Material material = intersection.getIntersectedTriangle().getMaterial();
+
         if(!lightIntersection.isNull() && 0.0001 <= glm::length(lightIntersection.getIntersectionPoint()-intersection.getIntersectionPoint())) {
           brightness = 0;
         } else {
@@ -146,21 +173,18 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
             brightness = angleOfIncidence;
 
           } else if (lighting == "specular") {
-            glm::vec3 ri = glm::normalize(lightRay.getDirection());
-            glm::vec3 rr = glm::normalize(ri - normal * (float)(2*glm::dot(ri, normal)));
-            brightness = pow(glm::dot(-ray.getDirection(), rr), 64);
+            Ray reflectedRay = lightRay.reflect(intersection);
+            brightness = pow(glm::dot(-ray.getDirection(), reflectedRay.getDirection()), 64);
 
           } else if (lighting == "all") {
             float r =  glm::length(light - lightIntersection.getIntersectionPoint());
             float brightness1 = 1 / (4 * M_PI * r * r);
 
-            glm::vec3 normal = intersection.getIntersectedTriangle().getNormal();
             float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
             float brightness2 = angleOfIncidence;
 
-            glm::vec3 ri = glm::normalize(lightRay.getDirection());
-            glm::vec3 rr = glm::normalize(ri - normal * (float)(2*glm::dot(ri, normal)));
-            float brightness3 = 3*pow(glm::dot(-ray.getDirection(), rr), 64);
+            Ray reflectedRay = lightRay.reflect(intersection);
+            float brightness3 = pow(glm::dot(-ray.getDirection(), reflectedRay.getDirection()), 64);
 
             brightness = (brightness1 + brightness2 + brightness3)/3;
 
@@ -168,8 +192,11 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
             brightness = 1;
           }
         }
+
         brightness += 0.2;
         material.setBrightness(brightness);
+        float scaledX = (x - (window.width/2))*scalar + (window.width/2);
+        float scaledY = (y - (window.height/2))*scalar + (window.height/2);
         window.hardSetPixelColour(scaledX, scaledY, 0, material.getColour());
 			}
 		}
@@ -187,7 +214,7 @@ void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar
   }
 }
 
-RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces) {
+RayTriangleIntersection Model::getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces) {
   std::vector<RayTriangleIntersection> intersections;
   for (ModelTriangle triangle: faces) {
     intersections.push_back(ray.findTriangleIntersection(triangle));

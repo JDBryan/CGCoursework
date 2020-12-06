@@ -8,6 +8,8 @@ Material::Material(std::string name) {
   _colour = Colour(0,0,0);
   _hasTexture = false;
   _brightness = 1;
+  _reflectivity = 0;
+
 }
 
 Material::Material(Colour colour) {
@@ -15,6 +17,7 @@ Material::Material(Colour colour) {
   _colour = colour;
   _hasTexture = false;
   _brightness = 1;
+  _reflectivity = 0;
 }
 
 Material::Material(TextureMap texture) {
@@ -23,6 +26,7 @@ Material::Material(TextureMap texture) {
   _texture = texture;
   _hasTexture = true;
   _brightness = 1;
+  _reflectivity = 0;
 }
 
 std::string Material::getName() {
@@ -35,6 +39,10 @@ Colour Material::getColour() {
 
 TextureMap Material::getTexture() {
   return _texture;
+}
+
+float Material::getReflectivity() {
+  return _reflectivity;
 }
 
 bool Material::hasTexture() {
@@ -52,6 +60,10 @@ void Material::setTexture(TextureMap texture) {
 
 void Material::setBrightness(float brightness) {
     _brightness = brightness;
+}
+
+void Material::setReflectivity(float reflectivity) {
+  _reflectivity = reflectivity;
 }
 
 std::ostream &operator<<(std::ostream &os, const Material &material) {
