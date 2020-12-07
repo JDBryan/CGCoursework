@@ -44,6 +44,18 @@ glm::vec3 RayTriangleIntersection::getNormal() {
 	}
 }
 
+float RayTriangleIntersection::getV0Distance() {
+  return _v0Distance;
+}
+
+float RayTriangleIntersection::getV1Distance() {
+  return _v1Distance;
+}
+
+float RayTriangleIntersection::getV2Distance() {
+  return _v2Distance;
+}
+
 std::ostream &operator<<(std::ostream &os, const RayTriangleIntersection &rti) {
 	if (rti._isNull) {
 		os << "Intersection is null";

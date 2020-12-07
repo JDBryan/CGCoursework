@@ -25,6 +25,9 @@ class RayTriangleIntersection {
 		ModelTriangle getIntersectedTriangle();
 		glm::vec3 getIntersectionPoint();
 		glm::vec3 getNormal();
+		float getV0Distance();
+		float getV1Distance();
+		float getV2Distance();
 
 		friend std::ostream& operator<<(std::ostream &os, const RayTriangleIntersection &rti);
 };

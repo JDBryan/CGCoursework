@@ -5,8 +5,8 @@
 #include "Ray.h"
 #include "Utils.h"
 
-#define WIDTH 512
-#define HEIGHT 512
+#define WIDTH 256
+#define HEIGHT 256
 
 void update(DrawingWindow &window, Camera &camera, Model &model, int renderType) {
 	window.clearPixels();
@@ -15,7 +15,7 @@ void update(DrawingWindow &window, Camera &camera, Model &model, int renderType)
 	} else if (renderType == 1) {
 		model.fill(window, camera, 500);
 	} else if (renderType == 2) {
-		model.fillRayTracing(window, camera, 500, "all");
+		model.fillRayTracing(window, camera, 500, "all", "gouraud");
 	}
 }
 

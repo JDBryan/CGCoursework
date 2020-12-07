@@ -23,6 +23,9 @@ class ModelTriangle {
 		ModelPoint v0();
 		ModelPoint v1();
 		ModelPoint v2();
+		float getV0Distance();
+		float getV1Distance();
+		float getV2Distance();
 		Material getMaterial();
 		glm::vec3 getNormal();
 

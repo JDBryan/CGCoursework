@@ -20,11 +20,12 @@ class Model {
     std::vector<ModelObject> getObjects();
 
     RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces);
+    float getBrightness(Ray lightRay, RayTriangleIntersection lightRayIntersection, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, glm::vec3 light, glm::vec3 normal, std::string lightingType);
 
     void merge(Model secondModel);
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);
     void fill(DrawingWindow &window, Camera &camera, float scalar);
-    void fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lighting);
+    void fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lighting, std::string shading);
     void fillWithTextures(DrawingWindow &window, Camera &camera, float scalar);
 
   private:

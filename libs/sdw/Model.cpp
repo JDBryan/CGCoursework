@@ -121,7 +121,7 @@ void Model::fill(DrawingWindow &window, Camera &camera, float scalar) {
   }
 }
 
-void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lighting) {
+void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, std::string lightingType, std::string shading) {
   glm::vec3 light = glm::vec3(0,0,1);
   float startRatio = (scalar - 1) / (2 * scalar);
   float endRatio = (scalar + 1) / (2 * scalar);
@@ -143,58 +143,46 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
         std::cout << (int)(counter/(window.width*window.height)*100) << std::endl;
         percent += 1;
       }
-			Ray ray = Ray(window, camera, CanvasPoint(x,y,0));
-			RayTriangleIntersection intersection = getClosestIntersection(ray, faces);
-      Material material = intersection.getIntersectedTriangle().getMaterial();
+			Ray cameraRay = Ray(window, camera, CanvasPoint(x,y,0));
+			RayTriangleIntersection cameraRayIntersection = getClosestIntersection(cameraRay, faces);
+      Material material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
-      if (!intersection.isNull() && material.getReflectivity() == 1) {
-        Ray reflectedCameraRay = ray.reflect(intersection);
-        intersection = getClosestIntersection(reflectedCameraRay, faces);
-        ray = reflectedCameraRay;
+      if (!cameraRayIntersection.isNull() && material.getReflectivity() == 1) {
+        Ray reflectedCameraRay = cameraRay.reflect(cameraRayIntersection);
+        cameraRayIntersection = getClosestIntersection(reflectedCameraRay, faces);
+        cameraRay = reflectedCameraRay;
       }
 
-      material = intersection.getIntersectedTriangle().getMaterial();
+      material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
-			if (!intersection.isNull()) {
-        glm::vec3 normal = intersection.getNormal();
-        Ray lightRay = Ray(light, intersection.getIntersectionPoint());
-  			RayTriangleIntersection lightIntersection = getClosestIntersection(lightRay, faces);
-        float brightness;
-
-        if(!lightIntersection.isNull() && 0.0001 <= glm::length(lightIntersection.getIntersectionPoint()-intersection.getIntersectionPoint())) {
-          brightness = 0;
+			if (!cameraRayIntersection.isNull()) {
+        glm::vec3 normal;
+        if (shading == "phong") {
+          normal = cameraRayIntersection.getNormal();
         } else {
-          if (lighting == "proximity") {
-            float r =  glm::length(light - lightIntersection.getIntersectionPoint());
-            brightness = 1 / (4 * M_PI * r * r);
-
-          } else if (lighting == "angle of incidence") {
-            float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
-            brightness = angleOfIncidence;
-
-          } else if (lighting == "specular") {
-            Ray reflectedRay = lightRay.reflect(intersection);
-            brightness = pow(glm::dot(-ray.getDirection(), reflectedRay.getDirection()), 64);
-
-          } else if (lighting == "all") {
-            float r =  glm::length(light - lightIntersection.getIntersectionPoint());
-            float brightness1 = 1 / (4 * M_PI * r * r);
-
-            float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
-            float brightness2 = angleOfIncidence;
-
-            Ray reflectedRay = lightRay.reflect(intersection);
-            float brightness3 = pow(glm::dot(-ray.getDirection(), reflectedRay.getDirection()), 64);
-
-            brightness = (brightness1 + brightness2 + brightness3)/3;
-
-          } else {
-            brightness = 1;
-          }
+          normal = cameraRayIntersection.getIntersectedTriangle().getNormal();
         }
 
-        brightness += 0.2;
+        float brightness;
+        Ray lightRay = Ray(light, cameraRayIntersection.getIntersectionPoint());
+        RayTriangleIntersection lightRayIntersection = getClosestIntersection(lightRay, faces);
+        if (shading == "gouraud") {
+          glm::vec3 v0norm = cameraRayIntersection.getIntersectedTriangle().v0().getNormal();
+      		glm::vec3 v1norm = cameraRayIntersection.getIntersectedTriangle().v1().getNormal();
+      		glm::vec3 v2norm = cameraRayIntersection.getIntersectedTriangle().v2().getNormal();
+          float v0distance = cameraRayIntersection.getV0Distance();
+          float v1distance = cameraRayIntersection.getV1Distance();
+          float v2distance = cameraRayIntersection.getV2Distance();
+          float v0brightness = getBrightness(lightRay, lightRayIntersection, cameraRay, cameraRayIntersection, light, v0norm, lightingType);
+          float v1brightness = getBrightness(lightRay, lightRayIntersection, cameraRay, cameraRayIntersection, light, v1norm, lightingType);
+          float v2brightness = getBrightness(lightRay, lightRayIntersection, cameraRay, cameraRayIntersection, light, v2norm, lightingType);
+
+      		brightness = v0brightness * v0distance + v1brightness * v1distance + v2brightness * v2distance;
+        } else {
+          brightness = getBrightness(lightRay, lightRayIntersection, cameraRay, cameraRayIntersection, light, normal, lightingType);
+        }
         material.setBrightness(brightness);
+
         float scaledX = (x - (window.width/2))*scalar + (window.width/2);
         float scaledY = (y - (window.height/2))*scalar + (window.height/2);
         window.hardSetPixelColour(scaledX, scaledY, 0, material.getColour());
@@ -202,6 +190,45 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
 		}
   }
   std::cout << "done" << std::endl;
+}
+
+float Model::getBrightness(Ray lightRay, RayTriangleIntersection lightRayIntersection, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, glm::vec3 light, glm::vec3 normal, std::string lightingType) {
+
+  float brightness;
+  if(!lightRayIntersection.isNull() && 0.0001 <= glm::length(lightRayIntersection.getIntersectionPoint()-cameraRayIntersection.getIntersectionPoint())) {
+    brightness = 0;
+  } else {
+    if (lightingType == "proximity") {
+      float r =  glm::length(light - lightRayIntersection.getIntersectionPoint());
+      brightness = 1 / (4 * M_PI * r * r);
+
+    } else if (lightingType == "angle of incidence") {
+      float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
+      brightness = angleOfIncidence;
+
+    } else if (lightingType == "specular") {
+      Ray reflectedRay = lightRay.reflect(cameraRayIntersection);
+      brightness = pow(glm::dot(-cameraRay.getDirection(), reflectedRay.getDirection()), 64);
+
+    } else if (lightingType == "all") {
+      float r =  glm::length(light - lightRayIntersection.getIntersectionPoint());
+      float brightness1 = 1 / (4 * M_PI * r * r);
+
+      float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
+      float brightness2 = angleOfIncidence;
+
+      Ray reflectedRay = lightRay.reflect(cameraRayIntersection);
+      float brightness3 = pow(glm::dot(-cameraRay.getDirection(), reflectedRay.getDirection()), 64);
+
+      brightness = (brightness1 + brightness2 + brightness3)/3;
+
+    } else {
+      brightness = 1;
+    }
+  }
+
+  brightness += 0.2;
+  return brightness;
 }
 
 void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar) {
