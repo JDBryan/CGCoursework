@@ -19,12 +19,18 @@ class CanvasTriangle {
 		CanvasPoint &v0();
 		CanvasPoint &v1();
 		CanvasPoint &v2();
+		CanvasPoint getFurthestPointFromCamera();
+		CanvasPoint getClosestPointFromCamera();
 
 		void drawFrame(DrawingWindow &window);
 		void fill(DrawingWindow &window);
 		void mapTexture(DrawingWindow &window);
-		void orderVertices();
+		void orderVerticesByHeight();
+		void orderVerticesByDepth();
+		void orderVerticesByWidth();
 		friend std::ostream &operator<<(std::ostream &os, const CanvasTriangle &triangle);
 };
 
-bool vertexComparator(CanvasPoint lhs, CanvasPoint rhs);
+bool vertexYComparator(CanvasPoint lhs, CanvasPoint rhs);
+bool vertexZComparator(CanvasPoint lhs, CanvasPoint rhs);
+bool vertexXComparator(CanvasPoint lhs, CanvasPoint rhs);

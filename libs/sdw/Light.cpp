@@ -10,6 +10,7 @@ glm::vec3 Light::getPoint() {
 }
 
 std::vector<glm::vec3> Light::getAllPoints(int resolution) {
+  if (resolution == 1) return {_centre};
   glm::vec3 backBottomLeft = glm::vec3(_centre.x - _radius, _centre.y - _radius, _centre.z + _radius);
   glm::vec3 frontBottomLeft = glm::vec3(_centre.x - _radius, _centre.y - _radius, _centre.z - _radius);
   std::vector<glm::vec3> bottomLeftEdge = interpolateVectors(frontBottomLeft, backBottomLeft, resolution);

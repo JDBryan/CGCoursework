@@ -47,28 +47,23 @@ void CanvasLine::draw(DrawingWindow &window) {
   } else {
     int numberOfSteps = std::ceil(std::max(std::abs(xDist), std::abs(yDist)))+1;
     std::vector<glm::vec3> positions = interpolateVectors(_v0.getPosition(), _v1.getPosition(), numberOfSteps);
-   for (int i = 0; i < numberOfSteps; i++) {
-     window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getColour());
-   }
+    for (int i = 0; i < numberOfSteps; i++) {
+      window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getColour());
+    }
   }
 }
 
 void CanvasLine::mapTexture(DrawingWindow &window) {
-  if (!_material.hasTexture()) {
-    std::cout << "No texture found for line" << std::endl;
-    return;
-  }
+  float xDist = _v1.x() - _v0.x();
+  float yDist = _v1.y() - _v0.y();
   if (length() == 0) {
     window.setPixelColour(_v0.x(), _v0.y(), _v0.z(), _material.getTexture().getColourFromPoint(_v0.getTexturePoint().x(), _v0.getTexturePoint().y()));
   } else {
-    float xDist = _v1.x() - _v0.x();
-    float yDist = _v1.y() - _v0.y();
     int numberOfSteps = std::ceil(std::max(std::abs(xDist), std::abs(yDist)))+1;
-    std::vector<float> xTextVals = interpolateSingleFloats(_v0.getTexturePoint().x(), _v1.getTexturePoint().x(), numberOfSteps);
-    std::vector<float> yTextVals = interpolateSingleFloats(_v0.getTexturePoint().y(), _v1.getTexturePoint().y(), numberOfSteps);
+    std::vector<glm::vec2> textVals = interpolateVectors(_v0.getTexturePoint().getPosition(), _v1.getTexturePoint().getPosition(), numberOfSteps);
     std::vector<glm::vec3> positions = interpolateVectors(_v0.getPosition(), _v1.getPosition(), numberOfSteps);
     for (int i = 0; i < numberOfSteps; i++) {
-      window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getTexture().getColourFromPoint(xTextVals[i], yTextVals[i]));
+      window.setPixelColour(positions[i].x, positions[i].y, positions[i].z, _material.getTexture().getColourFromPoint(textVals[i].x, textVals[i].y));
     }
   }
 }

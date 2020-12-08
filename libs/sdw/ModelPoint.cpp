@@ -63,7 +63,7 @@ CanvasPoint ModelPoint::project(DrawingWindow &window, Camera &camera, float sca
   glm::vec3 orientedPoint = pos * camera.getOrientation();
   float canvasX = camera.getFocalLength() * ((-orientedPoint.x)/(orientedPoint.z));
   float canvasY = camera.getFocalLength() * (orientedPoint.y/orientedPoint.z);
-  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, orientedPoint.z, _material);
+  CanvasPoint point = CanvasPoint(canvasX*scalar + window.width/2, canvasY*scalar  + window.height/2, 1/orientedPoint.z, _material);
   point.setTexturePoint(_texturePoint.x(), _texturePoint.y());
   return point;
 }

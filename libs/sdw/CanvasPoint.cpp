@@ -57,6 +57,14 @@ void CanvasPoint::setTexturePoint(float x, float y) {
 	_texturePoint = TexturePoint(x, y);
 }
 
+void CanvasPoint::setX(float x) {
+	_position = glm::vec3(x, _position.y, _position.z);
+}
+
+void CanvasPoint::setY(float y) {
+	_position = glm::vec3(_position.x, y, _position.z);
+}
+
 //OTHER METHODS
 void CanvasPoint::draw(DrawingWindow &window) {
 	window.setPixelColour(_position.x, _position.y, _position.z, _material.getColour());

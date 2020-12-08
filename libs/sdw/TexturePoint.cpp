@@ -14,6 +14,10 @@ float TexturePoint::y() {
 	return _y;
 }
 
+glm::vec2 TexturePoint::getPosition() {
+	return glm::vec2(_x, _y);
+}
+
 std::ostream &operator<<(std::ostream &os, const TexturePoint &point) {
 	os << "x: " << point._x << " y: " << point._y;
 	return os;

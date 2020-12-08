@@ -147,11 +147,11 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
 			RayTriangleIntersection cameraRayIntersection = getClosestIntersection(cameraRay, faces);
       Material material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
-      if (!cameraRayIntersection.isNull() && material.getReflectivity() == 1) {
-        Ray reflectedCameraRay = cameraRay.reflect(cameraRayIntersection);
-        cameraRayIntersection = getClosestIntersection(reflectedCameraRay, faces);
-        cameraRay = reflectedCameraRay;
-      }
+      // if (!cameraRayIntersection.isNull() && material.getReflectivity() == 1) {
+      //   Ray reflectedCameraRay = cameraRay.reflect(cameraRayIntersection);
+      //   cameraRayIntersection = getClosestIntersection(reflectedCameraRay, faces);
+      //   cameraRay = reflectedCameraRay;
+      // }
 
       material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
@@ -178,6 +178,7 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
       		brightness = v0brightness * v0distance + v1brightness * v1distance + v2brightness * v2distance;
         } else {
           brightness = getBrightness(faces, cameraRay, cameraRayIntersection, light, normal, lightingType);
+          //brightness = 1;
         }
         material.setBrightness(brightness);
 
@@ -192,11 +193,11 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
 
 float Model::getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, Light light, glm::vec3 normal, std::string lightingType) {
   Ray lightRay = Ray(light.getPoint(), cameraRayIntersection.getIntersectionPoint());
-  RayTriangleIntersection lightRayIntersection = getClosestIntersection(lightRay, faces);
   float brightness;
   float numberOfRaysHitting = 0;
+  std::vector<glm::vec3> lightPoints  = light.getAllPoints(1);
 
-  for (glm::vec3 point: light.getAllPoints(1)) {
+  for (glm::vec3 point: lightPoints) {
     Ray ray = Ray(point, cameraRayIntersection.getIntersectionPoint());
     RayTriangleIntersection rayIntersection = getClosestIntersection(ray, faces);
     if(0.0001 >= glm::length(rayIntersection.getIntersectionPoint()-cameraRayIntersection.getIntersectionPoint())) {
@@ -204,9 +205,11 @@ float Model::getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayT
     }
   }
 
-  float shadowFactor = numberOfRaysHitting/light.getAllPoints(1).size();
+  float shadowFactor = numberOfRaysHitting/lightPoints.size();
+
   if (lightingType == "proximity") {
-    float r =  glm::length(light.getPoint() - lightRayIntersection.getIntersectionPoint());
+    glm::vec3 distanceToLight = light.getPoint() - cameraRayIntersection.getIntersectionPoint();
+    float r =  glm::dot(distanceToLight, distanceToLight);
     brightness = 1 / (4 * M_PI * r * r);
 
   } else if (lightingType == "angle of incidence") {
@@ -218,7 +221,8 @@ float Model::getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayT
     brightness = pow(glm::dot(-cameraRay.getDirection(), reflectedRay.getDirection()), 64);
 
   } else if (lightingType == "all") {
-    float r =  glm::length(light.getPoint() - lightRayIntersection.getIntersectionPoint());
+    glm::vec3 distanceToLight = light.getPoint() - cameraRayIntersection.getIntersectionPoint();
+    float r =  glm::dot(distanceToLight, distanceToLight);
     float brightness1 = 1 / (4 * M_PI * r * r);
 
     float angleOfIncidence = glm::dot(normal, -lightRay.getDirection());
@@ -248,13 +252,10 @@ void Model::fillWithTextures(DrawingWindow &window, Camera &camera, float scalar
 }
 
 RayTriangleIntersection Model::getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces) {
-  std::vector<RayTriangleIntersection> intersections;
-  for (ModelTriangle triangle: faces) {
-    intersections.push_back(ray.findTriangleIntersection(triangle));
-  }
   RayTriangleIntersection closestIntersection;
   float currentShortestDistance = std::numeric_limits<float>::infinity();
-  for (RayTriangleIntersection intersection: intersections) {
+  for (ModelTriangle triangle: faces) {
+    RayTriangleIntersection intersection = ray.findTriangleIntersection(triangle);
     if (intersection.getDistanceFromOrigin() < currentShortestDistance && intersection.getDistanceFromOrigin() > 0) {
       currentShortestDistance = intersection.getDistanceFromOrigin();
       closestIntersection = intersection;

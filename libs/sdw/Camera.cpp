@@ -67,6 +67,15 @@ void Camera::roll(float angle) {
   _orientation = _orientation * rotationMatrix;
 }
 
+// void camera_look_at(Camera &c, glm::vec4 pos) {
+//     glm::vec3 forward = glm::normalize(glm::vec3(c.transformation[3] - pos));
+//     glm::vec3 right = glm::cross(glm::vec3(0, 1, 0), forward);
+//     glm::vec3 up = glm::cross(forward, right);
+//     c.transformation[0] = glm::vec4(right, 0);
+//     c.transformation[1] = glm::vec4(up, 0);
+//     c.transformation[2] = glm::vec4(forward, 0);
+// }
+
 void Camera::orbitX(float angle) {
   glm::mat3 rotationMatrix = glm::mat3(
     1, 0, 0,

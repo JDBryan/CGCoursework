@@ -28,6 +28,8 @@ class CanvasPoint {
 		glm::vec3 getTextPosition();
 
 		void setTexturePoint(float x, float y);
+		void setX(float x);
+		void setY(float y);
 
 		void draw(DrawingWindow &window);
 		friend std::ostream &operator<<(std::ostream &os, const CanvasPoint &point);

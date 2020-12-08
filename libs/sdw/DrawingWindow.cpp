@@ -72,16 +72,16 @@ bool DrawingWindow::pollForInputEvents(SDL_Event &event) {
 }
 
 void DrawingWindow::setPixelColour(size_t x, size_t y, float z, Colour colour) {
-	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= 1/z) {
+	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= z) {
 		pixelBuffer[(y * width) + x] = colour.pack();
-		depthBuffer[(y * width) + x] = 1/z;
+		depthBuffer[(y * width) + x] = z;
 	} else {
 		//std::cout << x << "," << y << " not on visible screen area" << std::endl;
 	}
 }
 
 void DrawingWindow::hardSetPixelColour(size_t x, size_t y, float z, Colour colour) {
-	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= 1/z) {
+	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= z) {
 		pixelBuffer[(y * width) + x] = colour.pack();
 	} else {
 		//std::cout << x << "," << y << " not on visible screen area" << std::endl;
