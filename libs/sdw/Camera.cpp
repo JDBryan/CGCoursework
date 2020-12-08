@@ -66,3 +66,13 @@ void Camera::roll(float angle) {
   );
   _orientation = _orientation * rotationMatrix;
 }
+
+void Camera::orbitX(float angle) {
+  glm::mat3 rotationMatrix = glm::mat3(
+    1, 0, 0,
+    0, std::cos(angle), std::sin(angle),
+    0, -std::sin(angle), std::cos(angle)
+  );
+  tilt(-angle);
+  _position = _position * rotationMatrix;
+}

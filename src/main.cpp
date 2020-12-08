@@ -13,9 +13,9 @@ void update(DrawingWindow &window, Camera &camera, Model &model, int renderType)
 	if (renderType == 0) {
 		model.drawFrame(window, camera, 500);
 	} else if (renderType == 1) {
-		model.fill(window, camera, 500);
+		model.fillWithTextures(window, camera, 500);
 	} else if (renderType == 2) {
-		model.fillRayTracing(window, camera, 500, "all", "gouraud");
+		//model.fillRayTracing(window, camera, 500, "all", "phong");
 	}
 }
 
@@ -30,9 +30,9 @@ int handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera, int rend
 		} else if (event.key.keysym.sym == SDLK_DOWN) {
 			camera.tilt(-0.1);
 		} else if (event.key.keysym.sym == SDLK_w) {
-			camera.translate(0,0,-1);
+			camera.orbitX(0.1);
 		} else if (event.key.keysym.sym == SDLK_a) {
-			camera.translate(-1,0,0);
+			camera.orbitX(-0.1);
 		} else if (event.key.keysym.sym == SDLK_s) {
 			camera.translate(0,0,1);
 		} else if (event.key.keysym.sym == SDLK_d) {
@@ -60,9 +60,9 @@ int main(int argc, char *argv[]) {
 	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	Camera camera = Camera(0, 0, 4, 2);
 	TextureMap texture = TextureMap("assets/texture.ppm");
-	Model sphere = Model("assets/", "sphere.obj", 0.17);
-	Model cornellBox = Model("assets/", "cornell-box.obj", 0.17);
-	cornellBox.merge(sphere);
+	//Model sphere = Model("assets/", "sphere.obj", 0.17);
+	Model cornellBox = Model("assets/", "textured-cornell-box.obj", 0.17);
+	//cornellBox.merge(sphere);
 	cornellBox.drawFrame(window, camera, 500);
 	int renderType = 0;
 	SDL_Event event;

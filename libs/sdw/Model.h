@@ -10,6 +10,7 @@
 #include "ModelObject.h"
 #include "Utils.h"
 #include "Ray.h"
+#include "Light.h"
 
 
 class Model {
@@ -20,7 +21,7 @@ class Model {
     std::vector<ModelObject> getObjects();
 
     RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces);
-    float getBrightness(Ray lightRay, RayTriangleIntersection lightRayIntersection, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, glm::vec3 light, glm::vec3 normal, std::string lightingType);
+    float getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, Light light, glm::vec3 normal, std::string lightingType);
 
     void merge(Model secondModel);
     void drawFrame(DrawingWindow &window, Camera &camera, float scalar);

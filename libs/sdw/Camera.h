@@ -20,4 +20,5 @@ class Camera {
     void tilt(float angle);
     void pan(float angle);
     void roll(float angle);
+    void orbitX(float angle);
 };
