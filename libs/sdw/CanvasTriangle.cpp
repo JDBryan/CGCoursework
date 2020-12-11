@@ -119,9 +119,9 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
   std::vector<glm::vec3> tPositions02 = interpolateVectors(v0().getTextPosition(), splitPoint.getTextPosition(), topHalfSteps);
 
   for (int i = 0; i < topHalfSteps; i++) {
-    if (v0().y() + i >= window.height) return;
     CanvasPoint point1 = CanvasPoint(positions01[i]);
     CanvasPoint point2 = CanvasPoint(positions02[i]);
+    if (v0().y() + i >= window.height) return;
     if (point1.x() < 0) point1.setX(0);
     if (point1.x() >= window.width) point1.setX(window.width-1);
     if (point2.x() < 0) point2.setX(0);
@@ -130,6 +130,7 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
     if (point1.y() >= window.height) point1.setY(window.height-1);
     if (point2.y() < 0) point2.setY(0);
     if (point2.y() >= window.height) point2.setY(window.height-1);
+
     point1.setTexturePoint(tPositions01[i].x, tPositions01[i].y);
     point2.setTexturePoint(tPositions02[i].x, tPositions02[i].y);
     CanvasLine line = CanvasLine(point1, point2, _material);
@@ -148,9 +149,9 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
   tPositions02 = interpolateVectors(splitPoint.getTextPosition(), v2().getTextPosition(), bottomHalfSteps);
 
   for (int i = 0; i < bottomHalfSteps; i++) {
-    if (v1().y() + i >= window.height) return;
     CanvasPoint point1 = CanvasPoint(positions12[i]);
     CanvasPoint point2 = CanvasPoint(positions02[i]);
+    if (v1().y() + i >= window.height) return;
     if (point1.x() < 0) point1.setX(0);
     if (point1.x() >= window.width) point1.setX(window.width-1);
     if (point2.x() < 0) point2.setX(0);
@@ -159,6 +160,7 @@ void CanvasTriangle::mapTexture(DrawingWindow &window) {
     if (point1.y() >= window.height) point1.setY(window.height-1);
     if (point2.y() < 0) point2.setY(0);
     if (point2.y() >= window.height) point2.setY(window.height-1);
+
     point1.setTexturePoint(tPositions12[i].x, tPositions12[i].y);
     point2.setTexturePoint(tPositions02[i].x, tPositions02[i].y);
     CanvasLine line = CanvasLine(point1, point2, _material);
@@ -182,14 +184,14 @@ CanvasPoint CanvasTriangle::getFurthestPointFromCamera() {
   orderVerticesByDepth();
   CanvasPoint result = _vertices[0];
   orderVerticesByHeight();
-  return _vertices[0];
+  return result;
 }
 
 CanvasPoint CanvasTriangle::getClosestPointFromCamera() {
   orderVerticesByDepth();
   CanvasPoint result = _vertices[2];
   orderVerticesByHeight();
-  return _vertices[0];
+  return result;
 }
 
 std::ostream &operator<<(std::ostream &os, const CanvasTriangle &triangle) {

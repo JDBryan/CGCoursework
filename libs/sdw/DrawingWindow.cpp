@@ -20,13 +20,20 @@ DrawingWindow::DrawingWindow(int w, int h, bool fullscreen) : width(w), height(h
 	int PIXELFORMAT = SDL_PIXELFORMAT_ARGB8888;
 	texture = SDL_CreateTexture(renderer, PIXELFORMAT, SDL_TEXTUREACCESS_STATIC, width, height);
 	if (!texture) printMessageAndQuit("Could not allocate texture: ", SDL_GetError());
+	_frames = 0;
 }
 
-void DrawingWindow::renderFrame() {
+void DrawingWindow::renderFrame(bool record) {
 	SDL_UpdateTexture(texture, nullptr, pixelBuffer.data(), width * sizeof(uint32_t));
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 	SDL_RenderPresent(renderer);
+	if (record) {
+    std::stringstream fileName;
+    fileName << "output/output-" << _frames << ".bmp";
+    saveBMP(fileName.str());
+  }
+	_frames++;
 }
 
 void DrawingWindow::saveBMP(const std::string &filename) const {
@@ -72,9 +79,9 @@ bool DrawingWindow::pollForInputEvents(SDL_Event &event) {
 }
 
 void DrawingWindow::setPixelColour(size_t x, size_t y, float z, Colour colour) {
-	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= z) {
+	if (x >= 0 && x < width && y >= 0 && y < height && depthBuffer[(y * width) + x] >= 1/z) {
 		pixelBuffer[(y * width) + x] = colour.pack();
-		depthBuffer[(y * width) + x] = z;
+		depthBuffer[(y * width) + x] = 1/z;
 	} else {
 		//std::cout << x << "," << y << " not on visible screen area" << std::endl;
 	}

@@ -35,7 +35,7 @@ Model::Model(std::string fileLocation, std::string fileName, float scalar) {
       normals.push_back(normal);
 
     } else if (tokens[0] == "vt") {
-      TexturePoint texturePoint = TexturePoint(std::stof(tokens[1])*480, std::stof(tokens[2])*395);
+      TexturePoint texturePoint = TexturePoint(std::stof(tokens[1])*currentObject.getMaterial().getTexture().width, std::stof(tokens[2])*currentObject.getMaterial().getTexture().height);
       texturePoints.push_back(texturePoint);
 
     } else if (tokens[0] == "f") {
@@ -87,6 +87,7 @@ std::map<std::string, Material> Model::loadMaterials(std::string fileLocation, s
       currentMaterial.setColour(colour);
 
     } else if (tokens[0] == "map_Kd"){
+      std::cout << tokens[1] << std::endl;
       TextureMap texture = TextureMap(fileLocation + tokens[1]);
       currentMaterial.setTexture(texture);
     }
@@ -138,7 +139,6 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
   for (float x = startRatio*window.width; x <= endRatio*window.width; x+= 1/(scalar+1)) {
 		for (float y = startRatio*window.height; y <= endRatio*window.height; y+= 1/(scalar+1)) {
       counter ++;
-      //std::cout << counter/(window.width*window.height)*100 << std::endl;
       if ((counter/(window.width*window.height))*100 > percent) {
         std::cout << (int)(counter/(window.width*window.height)*100) << std::endl;
         percent += 1;
@@ -147,11 +147,11 @@ void Model::fillRayTracing(DrawingWindow &window, Camera &camera, float scalar, 
 			RayTriangleIntersection cameraRayIntersection = getClosestIntersection(cameraRay, faces);
       Material material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
-      // if (!cameraRayIntersection.isNull() && material.getReflectivity() == 1) {
-      //   Ray reflectedCameraRay = cameraRay.reflect(cameraRayIntersection);
-      //   cameraRayIntersection = getClosestIntersection(reflectedCameraRay, faces);
-      //   cameraRay = reflectedCameraRay;
-      // }
+      if (!cameraRayIntersection.isNull() && material.getReflectivity() == 1) {
+        Ray reflectedCameraRay = cameraRay.reflect(cameraRayIntersection);
+        cameraRayIntersection = getClosestIntersection(reflectedCameraRay, faces);
+        cameraRay = reflectedCameraRay;
+      }
 
       material = cameraRayIntersection.getIntersectedTriangle().getMaterial();
 
@@ -195,12 +195,11 @@ float Model::getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayT
   Ray lightRay = Ray(light.getPoint(), cameraRayIntersection.getIntersectionPoint());
   float brightness;
   float numberOfRaysHitting = 0;
-  std::vector<glm::vec3> lightPoints  = light.getAllPoints(1);
+  std::vector<glm::vec3> lightPoints  = light.getAllPoints(2);
 
   for (glm::vec3 point: lightPoints) {
     Ray ray = Ray(point, cameraRayIntersection.getIntersectionPoint());
-    RayTriangleIntersection rayIntersection = getClosestIntersection(ray, faces);
-    if(0.0001 >= glm::length(rayIntersection.getIntersectionPoint()-cameraRayIntersection.getIntersectionPoint())) {
+    if(!doesIntersect(ray, faces, glm::length(point - cameraRayIntersection.getIntersectionPoint()))) {
       numberOfRaysHitting++;
     }
   }
@@ -255,11 +254,38 @@ RayTriangleIntersection Model::getClosestIntersection(Ray ray, std::vector<Model
   RayTriangleIntersection closestIntersection;
   float currentShortestDistance = std::numeric_limits<float>::infinity();
   for (ModelTriangle triangle: faces) {
-    RayTriangleIntersection intersection = ray.findTriangleIntersection(triangle);
-    if (intersection.getDistanceFromOrigin() < currentShortestDistance && intersection.getDistanceFromOrigin() > 0) {
-      currentShortestDistance = intersection.getDistanceFromOrigin();
-      closestIntersection = intersection;
+
+    glm::vec3 e0 = triangle.v1().getPosition() - triangle.v0().getPosition();
+    glm::vec3 e1 = triangle.v2().getPosition() - triangle.v0().getPosition();
+    glm::vec3 SPVector = ray.getPosition() - triangle.v0().getPosition();
+    glm::mat3 DEMatrix(-ray.getDirection(), e0, e1);
+    glm::vec3 possibleSolution = glm::inverse(DEMatrix) * SPVector;
+
+    if (possibleSolution[1] <= 1 && possibleSolution[1] >= 0 && possibleSolution[2] <= 1 && possibleSolution[2] >= 0 && possibleSolution[1] + possibleSolution[2] <= 1) {
+      if (possibleSolution[0] < currentShortestDistance && possibleSolution[0] > 0) {
+        glm::vec3 r = triangle.v0().getPosition() + (possibleSolution[1] * e0) + (possibleSolution[2] * e1);
+        closestIntersection = RayTriangleIntersection(r, possibleSolution[0], possibleSolution[1], possibleSolution[2], triangle);
+        currentShortestDistance = possibleSolution[0];
+      }
     }
   }
   return closestIntersection;
+}
+
+bool Model::doesIntersect(Ray ray, std::vector<ModelTriangle> faces, float rayLength) {
+  for (ModelTriangle triangle: faces) {
+
+    glm::vec3 e0 = triangle.v1().getPosition() - triangle.v0().getPosition();
+    glm::vec3 e1 = triangle.v2().getPosition() - triangle.v0().getPosition();
+    glm::vec3 SPVector = ray.getPosition() - triangle.v0().getPosition();
+    glm::mat3 DEMatrix(-ray.getDirection(), e0, e1);
+    glm::vec3 possibleSolution = glm::inverse(DEMatrix) * SPVector;
+
+    if (possibleSolution[1] <= 1 && possibleSolution[1] >= 0 && possibleSolution[2] <= 1 && possibleSolution[2] >= 0 && possibleSolution[1] + possibleSolution[2] <= 1) {
+      if (possibleSolution[0] < rayLength - 0.0001 && possibleSolution[0] > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

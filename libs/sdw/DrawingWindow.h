@@ -1,5 +1,5 @@
 #pragma once
-
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -18,6 +18,7 @@ private:
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
+	int _frames;
 	std::vector<uint32_t> pixelBuffer;
 	std::vector<float> depthBuffer;
 
@@ -25,7 +26,7 @@ private:
 public:
 	DrawingWindow();
 	DrawingWindow(int w, int h, bool fullscreen);
-	void renderFrame();
+	void renderFrame(bool record);
 	void savePPM(const std::string &filename) const;
 	void saveBMP(const std::string &filename) const;
 	bool pollForInputEvents(SDL_Event &event);

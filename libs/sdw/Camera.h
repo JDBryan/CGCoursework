@@ -1,4 +1,7 @@
+#pragma once
 #include <glm/glm.hpp>
+#include <string>
+#include <iostream>
 
 class Camera {
   private:
@@ -16,9 +19,13 @@ class Camera {
     glm::mat3 getOrientation();
     float getFocalLength();
 
+    void lookAt(glm::vec3 pos);
+    void setPosition(glm::vec3 pos);
     void translate(float x, float y, float z);
     void tilt(float angle);
     void pan(float angle);
     void roll(float angle);
     void orbitX(float angle);
+    void orbitY(float angle);
+    void orbitZ(float angle);
 };

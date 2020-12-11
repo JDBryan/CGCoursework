@@ -21,6 +21,7 @@ class Model {
     std::vector<ModelObject> getObjects();
 
     RayTriangleIntersection getClosestIntersection(Ray ray, std::vector<ModelTriangle> faces);
+    bool doesIntersect(Ray ray, std::vector<ModelTriangle> faces, float rayLength);
     float getBrightness(std::vector<ModelTriangle> faces, Ray cameraRay, RayTriangleIntersection cameraRayIntersection, Light light, glm::vec3 normal, std::string lightingType);
 
     void merge(Model secondModel);

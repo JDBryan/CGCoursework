@@ -30,7 +30,7 @@ TextureMap::TextureMap(const std::string &filename) {
 }
 
 Colour TextureMap::getColourFromPoint(int x, int y) {
-	if (x <= 0 || x > width || y <= 0 || y > height) {
+	if (x < 0 || x > width || y < 0 || y > height) {
 		std::cout << "WIDTH: " << width << "HEIGHT: " << height << std::endl;
 		std::cout << "WRONG: " << x << ", " << y << std::endl;
 	}
